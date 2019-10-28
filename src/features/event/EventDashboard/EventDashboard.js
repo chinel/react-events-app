@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Grid, Button } from "semantic-ui-react";
 import EventList from "../EventList/EventList";
 import EventForm from "../EventForm/EventForm";
+import cuid from 'cuid';
 
 const eventsFromDashboard = [
   {
@@ -72,6 +73,15 @@ class EventDashboard extends Component {
     });
   };
 
+  handleCreateEvent = (newEvent) => {
+    newEvent.id = cuid();
+    newEvent.hostPhotoURL = "/assets/user.png";
+    const updatedEvent = [...this.state.events, newEvent]; //spread operator takes the current data inside of the array, spreads it out and then add the second parameter which is a new data to the end
+    this.setState({
+      events: updatedEvent
+    })
+  }
+
   render() {
     return (
       <Grid>
@@ -85,7 +95,7 @@ class EventDashboard extends Component {
             content="Create Event"
           />
           {this.state.isOpen && (
-            <EventForm handleFormCancel={this.handleFormCancel} />
+            <EventForm handleFormCancel={this.handleFormCancel} createEvent = {this.handleCreateEvent} />
           )}
         </Grid.Column>
       </Grid>
