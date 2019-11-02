@@ -76,9 +76,24 @@ class EventDashboard extends Component {
   };
 
 
-  handleEditEvent = (EventToUpdate) => () => {
+  handleUpdateEvent = (updatedEvent) => {
    this.setState({
-     selectedEvent: EventToUpdate,
+     events: this.state.events.map(event  => {
+       if(event.id === updatedEvent.id){
+         return Object.assign({}, updatedEvent)
+       }else{
+         return event;
+       }
+     }),
+     isOpen: false,
+     selectedEvent: null
+   })
+  }
+
+
+  handleOpenEvent = (EventToOpen) => () => {
+   this.setState({
+     selectedEvent: EventToOpen,
      isOpen: true
    })
   }
@@ -91,12 +106,21 @@ class EventDashboard extends Component {
     })
   }
 
+  handleDeleteEvent = (eventId) => () => {
+    console.log("An here");
+  const UpdatedEvents = this.state.events.filter(e => e.id !== eventId);
+  console.log(UpdatedEvents);
+  this.setState({
+    events: UpdatedEvents
+  });
+  }
+
   render() {
     const {selectedEvent} = this.state;
     return (
       <Grid>
         <Grid.Column width={10}>
-          <EventList onEventEdit={this.handleEditEvent} events={this.state.events} />
+          <EventList deleteEvent={this.handleDeleteEvent} onEventOpen={this.handleOpenEvent} events={this.state.events} />
         </Grid.Column>
         <Grid.Column width={6}>
           <Button
@@ -105,7 +129,7 @@ class EventDashboard extends Component {
             content="Create Event"
           />
           {this.state.isOpen && (
-            <EventForm selectedEvent={selectedEvent} handleFormCancel={this.handleFormCancel} createEvent = {this.handleCreateEvent} />
+            <EventForm updateEvent={this.handleUpdateEvent} selectedEvent={selectedEvent} handleFormCancel={this.handleFormCancel} createEvent = {this.handleCreateEvent} />
           )}
         </Grid.Column>
       </Grid>
