@@ -1,15 +1,32 @@
 import React, { Component } from 'react'
 import {Segment, Form, Button} from 'semantic-ui-react'
 
+const EmptyEvent  = {
+  title: "",
+  date: "",
+  city: "",
+  venue: "",
+  hostedBy: ""
+}
 class EventForm extends Component {
 
   state = {
-    event : {
-      title: "",
-      date: "",
-      city: "",
-      venue: "",
-      hostedBy: ""
+    event : EmptyEvent
+  }
+
+  componentDidMount(){
+   if(this.props.selectedEvent){
+     this.setState({
+       event: this.props.selectedEvent
+     })
+   }
+  }
+
+  componentWillReceiveProps(nextprop){
+    if(nextprop.selectedEvent !== this.props.selectedEvent){
+      this.setState({
+        event: nextprop.selectedEvent || EmptyEvent  // this sets the state to the nextprops if present else fallbacks to the empty Event, it works like a tenary operator
+      })
     }
   }
 
