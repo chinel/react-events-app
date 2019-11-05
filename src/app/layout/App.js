@@ -23,7 +23,7 @@ function App() {
             <NavBar />
             <Container className="main">
               <Route path="/events" component={EventDashboard} />
-              <Route path="/event:id" component={EventDetailedPage} />
+              <Route path="/event/:id" component={EventDetailedPage} />
               <Route path="/people" component={PeopleDashboard} />
               <Route path="/profile:id" component={UserDetailedPage} />
               <Route path="/settings" component={SettingsDashboard} />
