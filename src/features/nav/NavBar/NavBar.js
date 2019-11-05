@@ -28,12 +28,12 @@ class NavBar extends Component {
       <Menu inverted fixed="top">
         <Container>
           <Menu.Item header as={Link} to="/">
-            <img src="assets/logo.png" alt="logo" />
+            <img src="/assets/logo.png" alt="logo" /> {/* The / infront of the assets makes it a relative path*/}
             Re-vents
           </Menu.Item>
           
           <Menu.Item as={NavLink} to="/events" name="Events" />
-          {authenticated && <Menu.Item as={NavLink} to="/people" name="People" />}
+          {authenticated && <Menu.Item as={NavLink} to="/people" name="People" /> }
           {authenticated &&
           <Menu.Item>
             <Button
@@ -43,8 +43,8 @@ class NavBar extends Component {
               positive
               inverted
               content="Create Event"
-            />}
-          </Menu.Item>
+            />  </Menu.Item> }
+         
           {authenticated ? (
             <SignedInMenu signOut={this.handleSignOut} />
           ) : (
