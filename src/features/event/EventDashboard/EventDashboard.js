@@ -1,29 +1,27 @@
 import React, { Component } from "react";
 import { Grid, Button } from "semantic-ui-react";
 import EventList from "../EventList/EventList";
-import EventForm from "../EventForm/EventForm";
-import cuid from "cuid";
 import { connect } from "react-redux";
-import { createEvent, updateEvent, deleteEvent } from "../eventActions";
+import {deleteEvent } from "../eventActions";
 
 const mapState = state => ({
   events: state.events
 });
 
 const actions = {
-  createEvent,
-  updateEvent,
+ /*  createEvent,
+  updateEvent, */
   deleteEvent
 };
 
 class EventDashboard extends Component {
-  state = {
+ /*  state = {
     //events: eventsFromDashboard,
     isOpen: false,
     selectedEvent: null
-  };
+  }; */
 
-  handleFormOpen = () => {
+/*   handleFormOpen = () => {
     this.setState({
       selectedEvent: null,
       isOpen: true
@@ -34,30 +32,31 @@ class EventDashboard extends Component {
     this.setState({
       isOpen: false
     });
-  };
+  }; */
 
-  handleUpdateEvent = updatedEvent => {
+/*   handleUpdateEvent = updatedEvent => {
     this.props.updateEvent(updatedEvent);
     this.setState({
-     /*  events: this.state.events.map(event => {
+       events: this.state.events.map(event => {
         if (event.id === updatedEvent.id) {
           return Object.assign({}, updatedEvent);
         } else {
           return event;
         }
-      }), */
+      }), 
       isOpen: false,
       selectedEvent: null
     });
-  };
+  }; */
 
-  handleOpenEvent = EventToOpen => () => {
+/*   handleOpenEvent = EventToOpen => () => {
     this.setState({
       selectedEvent: EventToOpen,
       isOpen: true
     });
-  };
-  handleCreateEvent = newEvent => {
+  }; */
+  
+ /*  handleCreateEvent = newEvent => {
     newEvent.id = cuid();
     newEvent.hostPhotoURL = "/assets/user.png";
     this.props.createEvent(newEvent);
@@ -66,7 +65,7 @@ class EventDashboard extends Component {
      // events: updatedEvent,
      isOpen: false
     });
-  };
+  }; */
 
   handleDeleteEvent = eventId => () => {
     console.log("An here");
@@ -79,31 +78,17 @@ class EventDashboard extends Component {
   };
 
   render() {
-    const { selectedEvent } = this.state;
     const  {events} = this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
           <EventList
             deleteEvent={this.handleDeleteEvent}
-            onEventOpen={this.handleOpenEvent}
             events={/* this.state. */events}
           />
         </Grid.Column>
         <Grid.Column width={6}>
-          <Button
-            onClick={this.handleFormOpen}
-            positive
-            content="Create Event"
-          />
-          {this.state.isOpen && (
-            <EventForm
-              updateEvent={this.handleUpdateEvent}
-              selectedEvent={selectedEvent}
-              handleFormCancel={this.handleFormCancel}
-              createEvent={this.handleCreateEvent}
-            />
-          )}
+         
         </Grid.Column>
       </Grid>
     );
