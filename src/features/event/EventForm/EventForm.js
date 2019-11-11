@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import cuid from 'cuid';
 import { Segment, Form, Button } from "semantic-ui-react";
+import {  createEvent, updateEvent} from '../eventActions';
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -21,6 +23,11 @@ const mapState = (state, ownProps) => {
     event
   };
 };
+
+const actions = {
+  createEvent,
+  updateEvent
+}
 
 class EventForm extends Component {
   state = {
@@ -49,8 +56,15 @@ class EventForm extends Component {
     evt.preventDefault();
     if (this.state.event.id) {
       this.props.updateEvent(this.state.event);
+      this.props.history.goBack();
     } else {
-      this.props.createEvent(this.state.event);
+      const newEvent = {
+        ...this.state.event,
+        id: cuid(),
+        hostPhotoURL: "/assets/user.png"
+      }
+      this.props.createEvent(newEvent);
+      this.props.history.push("/events");
     }
   };
 
@@ -117,7 +131,7 @@ class EventForm extends Component {
           <Button positive type="submit">
             Submit
           </Button>
-          <Button onClick={handleFormCancel} type="button">
+          <Button onClick={this.props.history.goBack} type="button">
             Cancel
           </Button>
         </Form>
@@ -126,4 +140,4 @@ class EventForm extends Component {
   }
 }
 
-export default connect(mapState)(EventForm);
+export default connect(mapState, actions)(EventForm);
