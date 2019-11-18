@@ -1,19 +1,25 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan } from 'revalidate'
+import {
+  composeValidators,
+  combineValidators,
+  isRequired,
+  hasLengthGreaterThan
+} from "revalidate";
 import cuid from "cuid";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { createEvent, updateEvent } from "../eventActions";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import DateInput from "../../../app/common/form/DateInput";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
 
   //WITH REDUX FORM YOU WON'T BE NEEDING TO CREATE FIELDS MANUALLY THIS ALREADY DONE AUTOMATICALLY
- /*  let event = {
+  /*  let event = {
     title: "",
     date: "",
     city: "",
@@ -28,18 +34,15 @@ const mapState = (state, ownProps) => {
     event = state.events.filter(event => event.id === eventId)[0];
   }
 
-  //WE WOULD NO LONGER BE NEEDING TO RETURN THE EVENT OBJECT 
- /*  return {
+  //WE WOULD NO LONGER BE NEEDING TO RETURN THE EVENT OBJECT
+  /*  return {
     event
   }; */
 
-
   //WITH REDUX FORM YOU CAN SET THE INITIAL VALUES AS SHOWN BELOW
   return {
-    initialValues:event
+    initialValues: event
   };
-
-
 };
 
 const actions = {
@@ -48,27 +51,29 @@ const actions = {
 };
 
 const category = [
-    {key: 'drinks', text: 'Drinks', value: 'drinks'},
-    {key: 'culture', text: 'Culture', value: 'culture'},
-    {key: 'film', text: 'Film', value: 'film'},
-    {key: 'food', text: 'Food', value: 'food'},
-    {key: 'music', text: 'Music', value: 'music'},
-    {key: 'travel', text: 'Travel', value: 'travel'},
+  { key: "drinks", text: "Drinks", value: "drinks" },
+  { key: "culture", text: "Culture", value: "culture" },
+  { key: "film", text: "Film", value: "film" },
+  { key: "food", text: "Food", value: "food" },
+  { key: "music", text: "Music", value: "music" },
+  { key: "travel", text: "Travel", value: "travel" }
 ];
 
 const validate = combineValidators({
-  title: isRequired({message: "The event title is required"}),
-  category: isRequired({message: "Please select a catrgory"}),
+  title: isRequired({ message: "The event title is required" }),
+  category: isRequired({ message: "Please select a catrgory" }),
   description: composeValidators(
-    isRequired({message: "Please enter a description"}),
-    hasLengthGreaterThan(4)({message: "Description has to be at least 5 characters"})
+    isRequired({ message: "Please enter a description" }),
+    hasLengthGreaterThan(4)({
+      message: "Description has to be at least 5 characters"
+    })
   )(),
-  city: isRequired('city'),
-  venue: isRequired('venue')
+  city: isRequired("city"),
+  venue: isRequired("venue")
 });
 
 class EventForm extends Component {
- /*  state = {
+  /*  state = {
     event: Object.assign({}, this.props.event)
   }; */
 
@@ -90,18 +95,18 @@ class EventForm extends Component {
     }
   } */
 
-/*   onFormSubmit = evt => { thi was used when redux form was not implemented */
+  /*   onFormSubmit = evt => { thi was used when redux form was not implemented */
   onFormSubmit = values => {
-   //this is no longer needed with redux forms evt.preventDefault();
-   /*  if (this.state.event.id) {  instead of using check in the state we will be checking the event data in initializeValues of redux forms*/
+    //this is no longer needed with redux forms evt.preventDefault();
+    /*  if (this.state.event.id) {  instead of using check in the state we will be checking the event data in initializeValues of redux forms*/
     if (this.props.initialValues.id) {
       this.props.updateEvent(this.state.event);
       this.props.history.goBack();
     } else {
       const newEvent = {
-       /*  ...this.state.event, we don;t need to get the value from the state rather we will get that from the values parameter passed  */
-       ...values, 
-       id: cuid(),
+        /*  ...this.state.event, we don;t need to get the value from the state rather we will get that from the values parameter passed  */
+        ...values,
+        id: cuid(),
         hostPhotoURL: "/assets/user.png",
         hostedBy: "Bob"
       };
@@ -120,14 +125,16 @@ class EventForm extends Component {
   }; */
   render() {
     /*     const { event } = this.state; */
-    const {invalid, pristine, submitting} = this.props;
+    const { invalid, pristine, submitting } = this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
           <Segment>
             <Header sub color="teal" content="Event Details" />
             {/* <Form onSubmit={this.onFormSubmit}>  this was used when redux form was not implemented*/}
-            <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}> {/*We will be using the handleSubmit method which was inherited from redux forms*/}
+            <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
+              {" "}
+              {/*We will be using the handleSubmit method which was inherited from redux forms*/}
               <Field
                 type="text"
                 name="title"
@@ -164,8 +171,13 @@ class EventForm extends Component {
               <Field
                 type="text"
                 name="date"
-                placeholder="Event Date"
-                component={TextInput}
+                placeholder="Date and Time of Event"
+                component={DateInput}
+                showTimeSelect  //the showTimeSelect allows us to add time select option
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                timeCaption="time"
+                dateFormat="YYYY/MM/DD HH:mm"
               />
               {/*  <Form.Field>
             <label>Event Title</label>
@@ -176,8 +188,11 @@ class EventForm extends Component {
               onChange={this.onInputChange}
             />
           </Form.Field> */}
-
-              <Button disabled={invalid || submitting || pristine} positive type="submit">
+              <Button
+                disabled={invalid || submitting || pristine}
+                positive
+                type="submit"
+              >
                 Submit
               </Button>
               <Button onClick={this.props.history.goBack} type="button">
@@ -194,4 +209,8 @@ class EventForm extends Component {
 export default connect(
   mapState,
   actions
-)(reduxForm({ form: "eventForm", enableReinitialize: true, validate })(EventForm));
+)(
+  reduxForm({ form: "eventForm", enableReinitialize: true, validate })(
+    EventForm
+  )
+);
