@@ -14,6 +14,7 @@ import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
+import moment from 'moment';
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -69,7 +70,8 @@ const validate = combineValidators({
     })
   )(),
   city: isRequired("city"),
-  venue: isRequired("venue")
+  venue: isRequired("venue"),
+  date: isRequired("date")
 });
 
 class EventForm extends Component {
@@ -99,8 +101,9 @@ class EventForm extends Component {
   onFormSubmit = values => {
     //this is no longer needed with redux forms evt.preventDefault();
     /*  if (this.state.event.id) {  instead of using check in the state we will be checking the event data in initializeValues of redux forms*/
-    if (this.props.initialValues.id) {
-      this.props.updateEvent(this.state.event);
+      values.date = moment(values.date).format();
+      if (this.props.initialValues.id) {
+      this.props.updateEvent(values);
       this.props.history.goBack();
     } else {
       const newEvent = {
@@ -177,7 +180,8 @@ class EventForm extends Component {
                 timeFormat="HH:mm"
                 timeIntervals={15}
                 timeCaption="time"
-                dateFormat="YYYY/MM/DD HH:mm"
+               /*  dateFormat="YYYY/MM/DD HH:mm"  this date format throws a lot of warning errors in the console use the format beloe */
+               dateFormat="YYYY-MM-DD HH:mm"
               />
               {/*  <Form.Field>
             <label>Event Title</label>
