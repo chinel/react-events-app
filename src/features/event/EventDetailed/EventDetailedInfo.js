@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Segment, Grid, Icon, Button } from "semantic-ui-react";
+import EventDetailedMap from "./EventDetailedMap";
 
 class EventDetailedInfo extends Component {
   state = {
@@ -46,10 +47,21 @@ class EventDetailedInfo extends Component {
               <span>{event.venue}</span>
             </Grid.Column>
             <Grid.Column width={4}>
-              <Button color="teal" size="tiny" content="Show Map" />
+              <Button
+                color="teal"
+                size="tiny"
+                content="Show Map"
+                onClick={this.showMapToggle}
+              />
             </Grid.Column>
           </Grid>
         </Segment>
+        {this.state.showMap && (
+          <EventDetailedMap
+            lat={event.venueLatLng.lat}
+            lng={event.venueLatLng.lng}
+          />
+        )}
       </Segment.Group>
     );
   }
