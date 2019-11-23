@@ -1,6 +1,10 @@
+/*global google*/
+//this global declaration up is called a a global namespace variables that are addded here that are not seen by the component
 import React, { Component } from "react";
+import Script from "react-load-script";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import {
   composeValidators,
   combineValidators,
@@ -14,7 +18,7 @@ import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
-import moment from 'moment';
+import moment from "moment";
 import PlacesInput from "../../../app/common/form/PlacesInput";
 
 const mapState = (state, ownProps) => {
@@ -76,6 +80,46 @@ const validate = combineValidators({
 });
 
 class EventForm extends Component {
+  state = {
+    cityLatLng: {},
+    venueLatLng: {},
+    scriptLoaded: false
+  };
+
+  handleScriptLoaded = () => {
+    this.setState({ scriptLoaded: true });
+  };
+
+  handleCitySelect = selectedCity => {
+    geocodeByAddress(
+      selectedCity
+    ) /* This returns a promise so we can need to use then to get the results */
+      .then(results => getLatLng(results[0]))
+      .then(latlng => {
+        this.setState({
+          cityLatLng: latlng
+        });
+      }).then(() => {
+        this.props.change('city',selectedCity)
+      }); //adding this last then is used to handle onMouseSelect because when you type and click on an option it does not work this helps to correct that because assigning this function to the onselect overrode the default
+  };
+
+
+  handleVenueSelect = selectedVenue => {
+    geocodeByAddress(
+      selectedVenue
+    ) /* This returns a promise so we can need to use then to get the results */
+      .then(results => getLatLng(results[0]))
+      .then(latlng => {
+        this.setState({
+          venueLatLng: latlng
+        });
+      }).then(() => {
+        this.props.change('venue',selectedVenue)
+      }); //adding this last then is used to handle onMouseSelect because when you type and click on an option it does not work this helps to correct that because assigning this function to the onselect overrode the default
+  };
+
+
   /*  state = {
     event: Object.assign({}, this.props.event)
   }; */
@@ -102,8 +146,9 @@ class EventForm extends Component {
   onFormSubmit = values => {
     //this is no longer needed with redux forms evt.preventDefault();
     /*  if (this.state.event.id) {  instead of using check in the state we will be checking the event data in initializeValues of redux forms*/
-      values.date = moment(values.date).format();
-      if (this.props.initialValues.id) {
+    values.date = moment(values.date).format();
+    values.venueLatLng = this.state.venueLatLng;
+    if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
     } else {
@@ -132,6 +177,10 @@ class EventForm extends Component {
     const { invalid, pristine, submitting } = this.props;
     return (
       <Grid>
+        <Script
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcM6uLV_zM-23FolzhjeWvKMaRlCTe95M&libraries=places"
+          onLoad={this.handleScriptLoaded}
+        />
         <Grid.Column width={10}>
           <Segment>
             <Header sub color="teal" content="Event Details" />
@@ -160,31 +209,46 @@ class EventForm extends Component {
                 component={TextArea}
               />
               <Header sub color="teal" content="Event Location Details" />
-              <Field
-                type="text"
-                name="city"
-                placeholder="Event City"
-                component={PlacesInput}
-                options={{types : ['(cities)']/*this narrows the search down to cities*/}}
-              />
+          
+                <Field
+                  type="text"
+                  name="city"
+                  placeholder="Event City"
+                  component={PlacesInput}
+                  options={{
+                    types: [
+                      "(cities)"
+                    ] /*this narrows the search down to cities*/
+                  }}
+                  onSelect={this.handleCitySelect}
+                />
+              
+              {this.state.scriptLoaded && (
               <Field
                 type="text"
                 name="venue"
                 placeholder="Event Venue"
-                options = {{ types: ['establishment']/*this narrows the search down to businesss*/}}
+                options={{
+                  location: new google.maps.LatLng(this.state.cityLatLng),
+                  radius: 1000,
+                  types: [
+                    "establishment"
+                  ] /*this narrows the search down to businesss, the location key narrows it down to businesses within the selected location above*/
+                }}
                 component={PlacesInput}
-              />
+                onSelect={this.handleVenueSelect}
+              />)}
               <Field
                 type="text"
                 name="date"
                 placeholder="Date and Time of Event"
                 component={DateInput}
-                showTimeSelect  //the showTimeSelect allows us to add time select option
+                showTimeSelect //the showTimeSelect allows us to add time select option
                 timeFormat="HH:mm"
                 timeIntervals={15}
                 timeCaption="time"
-               /*  dateFormat="YYYY/MM/DD HH:mm"  this date format throws a lot of warning errors in the console use the format beloe */
-               dateFormat="YYYY-MM-DD HH:mm"
+                /*  dateFormat="YYYY/MM/DD HH:mm"  this date format throws a lot of warning errors in the console use the format beloe */
+                dateFormat="YYYY-MM-DD HH:mm"
               />
               {/*  <Form.Field>
             <label>Event Title</label>
