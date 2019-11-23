@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 import Script  from "react-load-script";
 import PlacesAutocomplete, {
@@ -7,6 +7,7 @@ import PlacesAutocomplete, {
   getLatLng
 } from "react-places-autocomplete";
 import { incrementCounter, decrementCounter } from "../testarea/testActions";
+import GoogleMapReact from 'google-map-react';
 
 const mapState = state => ({
   data: state.test.data // the test represents the test reducer and the data is from the test reducer
@@ -18,7 +19,17 @@ const actions = {
   decrementCounter
 };
 
+const Marker = () => <Icon name="marker" size="big" color="red"/>
+
 class TestComponent extends Component {
+  static defaultProps = {  // This is a way of passing default props to a component that are not passed down from parents
+    center: {
+      lat: 59.95,
+      lng: 30.33
+    },
+    zoom: 11
+  };
+
   state = {
        address: "",
     scriptLoaded : false
@@ -50,10 +61,10 @@ class TestComponent extends Component {
       }
     return (
       <div>
-          <Script
-          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcM6uLV_zM-23FolzhjeWvKMaRlCTe95M&libraries=places"
-         onLoad={this.handleScriptLoad/*this event handler is used to check if the script has loaded this can be used to ensure that places autocomplete component is shown on the page so as to prevent error*/} 
-         />
+         {/*  <Script
+          url="https://maps.googleapis.com/maps/api/js?key=YourKey&libraries=places"
+         onLoad={this.handleScriptLoad/*this event handler is used to check if the script has loaded this can be used to ensure that places autocomplete component is shown on the page so as to prevent error 
+         /> The reason for commenting this out is because when you view the component the map does not show, the only thing you can probably see is google map api has been called multiple times so commenting this out, uses the one google map react version below */}
         <h1>Test Component</h1>
         <p>The answer is {data}</p>
         <Button onClick={incrementCounter} color="green" content="Increment" />
@@ -65,6 +76,19 @@ class TestComponent extends Component {
         {this.state.scriptLoaded &&<PlacesAutocomplete inputProps={inputProps} />}
         <button type="submit">Submit</button>
       </form>
+      <div style={{ height: '300px', width: '100%' }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: 'AIzaSyBcM6uLV_zM-23FolzhjeWvKMaRlCTe95M' }}
+          defaultCenter={this.props.center}
+          defaultZoom={this.props.zoom}
+        >
+          <Marker
+            lat={59.955413}
+            lng={30.337844}
+            text="My Marker"
+          />
+        </GoogleMapReact>
+      </div>
         
        </div>
     );
