@@ -7,7 +7,7 @@ const actions = {
   closeModal
 }
 
-const TestModal = ({closeModal}) => {  //Here we are bringing in the closeModal into the props for this component from the modalActions
+const TestModal = ({closeModal}) => {  //Here we are bringing in the closeModal into the props for this component which is inherited from the store as it is connected to the store
     return (
            <Modal closeIcon="close" open={true} onClose={closeModal}>
              <Modal.Header>Test Modal</Modal.Header>
