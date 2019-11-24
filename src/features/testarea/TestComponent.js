@@ -8,6 +8,7 @@ import PlacesAutocomplete, {
 } from "react-places-autocomplete";
 import { incrementCounter, decrementCounter } from "../testarea/testActions";
 import GoogleMapReact from 'google-map-react';
+import {  openModal} from '../modals/modalActions';
 
 const mapState = state => ({
   data: state.test.data // the test represents the test reducer and the data is from the test reducer
@@ -16,7 +17,8 @@ const mapState = state => ({
 const actions = {
   //this can be called any name here its called action and we need to let the component that will be using this action know abou the actions
   incrementCounter,
-  decrementCounter
+  decrementCounter,
+  openModal
 };
 
 const Marker = () => <Icon name="marker" size="big" color="red"/>
@@ -54,7 +56,7 @@ class TestComponent extends Component {
   onChange = (address) => this.setState({ address })
 
   render() {
-    const { incrementCounter, decrementCounter, data } = this.props;
+    const { incrementCounter, decrementCounter, data, openModal} = this.props;
     const inputProps = {
         value: this.state.address,
         onChange: this.onChange,
@@ -69,7 +71,7 @@ class TestComponent extends Component {
         <p>The answer is {data}</p>
         <Button onClick={incrementCounter} color="green" content="Increment" />
         <Button onClick={decrementCounter} color="red" content="Decrement" />
-
+        <Button onClick={() => openModal('TestModal', {data: 43})} color="teal" content="Open Modal" />
         <br/><br/>
         
         <form onSubmit={this.handleFormSubmit}>

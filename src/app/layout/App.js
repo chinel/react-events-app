@@ -10,10 +10,12 @@ import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage"
 import EventDetailedPage from "../../features/event/EventDetailed/EventDetailedPage";
 import HomePage from "../../features/home/HomePage";
 import TestComponent from "../../features/testarea/TestComponent";
+import ModalManager from "../../features/modals/ModalManager";
 
 function App() {
   return (
     <div>
+      <ModalManager/>{/*In other to display modals on the page we will be adding our modal manager to the app.js file */}
       <Switch>
         <Route exact path="/" component={HomePage} />
       </Switch>

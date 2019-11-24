@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
     form: formReducer,
     test: testReducer,
     events: eventReducer,
-     modalReducer: modalReducer
+     modals: modalReducer
 })
 
 export default rootReducer;
