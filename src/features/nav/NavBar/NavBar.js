@@ -5,15 +5,20 @@ import { Menu, Container, Button } from "semantic-ui-react";
 import SignedOutMenu from "../Menu/SignedOutMenu";
 import SignedInMenu from "../Menu/SignedInMenu";
 import { openModal } from "../../modals/modalActions";
+import { signOutUser } from '../../auth/authActions';
 
 const actions = {
-  openModal
+  openModal,
+  signOutUser
+
 };
 
+const mapState = (state) => ({
+  auth: state.auth
+})
+
 class NavBar extends Component {
-  state = {
-    authenticated: false
-  };
+ 
 
   handleSignIn = () => {
     this.props.openModal("LoginModal");
@@ -24,14 +29,16 @@ class NavBar extends Component {
   };
 
   handleSignOut = () => {
-    this.setState({
+    this.props.signOutUser();
+  /*   this.setState({
       authenticated: false
-    });
+    }); */
     this.props.history.push("/");
   };
 
   render() {
-    const { authenticated } = this.state;
+    const { auth } = this.props;
+    const authenticated = auth.authenticated
     return (
       <Menu inverted fixed="top">
         <Container>
@@ -60,7 +67,7 @@ class NavBar extends Component {
           )}
 
           {authenticated ? (
-            <SignedInMenu signOut={this.handleSignOut} />
+            <SignedInMenu currentUser={auth.currentUser} signOut={this.handleSignOut} />
           ) : (
             <SignedOutMenu
               signIn={this.handleSignIn}
@@ -73,4 +80,4 @@ class NavBar extends Component {
   }
 }
 
-export default withRouter(connect(null, actions)(NavBar));
+export default withRouter(connect(mapState, actions)(NavBar));
