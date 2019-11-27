@@ -6,18 +6,19 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from "react-places-autocomplete";
-import { incrementCounter, decrementCounter } from "../testarea/testActions";
+import { incrementAsync, decrementAsync } from "../testarea/testActions";
 import GoogleMapReact from 'google-map-react';
 import {  openModal} from '../modals/modalActions';
 
 const mapState = state => ({
-  data: state.test.data // the test represents the test reducer and the data is from the test reducer
+  data: state.test.data, // the test represents the test reducer and the data is from the test reducer
+  loading: state.test.loading
 });
 
 const actions = {
   //this can be called any name here its called action and we need to let the component that will be using this action know abou the actions
-  incrementCounter,
-  decrementCounter,
+  incrementAsync,
+  decrementAsync,
   openModal
 };
 
@@ -56,7 +57,7 @@ class TestComponent extends Component {
   onChange = (address) => this.setState({ address })
 
   render() {
-    const { incrementCounter, decrementCounter, data, openModal} = this.props;
+    const { incrementAsync, decrementAsync, data, openModal, loading} = this.props;
     const inputProps = {
         value: this.state.address,
         onChange: this.onChange,
@@ -69,8 +70,8 @@ class TestComponent extends Component {
          /> The reason for commenting this out is because when you view the component the map does not show, the only thing you can probably see is google map api has been called multiple times so commenting this out, uses the one google map react version below */}
         <h1>Test Component</h1>
         <p>The answer is {data}</p>
-        <Button onClick={incrementCounter} color="green" content="Increment" />
-        <Button onClick={decrementCounter} color="red" content="Decrement" />
+        <Button loading={loading} onClick={incrementAsync} color="green" content="Increment" /> 
+        <Button loading={loading} onClick={decrementAsync} color="red" content="Decrement" />
         <Button onClick={() => openModal('TestModal', {data: 43})} color="teal" content="Open Modal" />
         <br/><br/>
         
