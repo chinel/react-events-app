@@ -1,5 +1,5 @@
 import { createReducer } from '../../app/common/util/reducerUtil';
-import {  CREATE_EVENT, UPDATE_EVENT, DELETE_EVENT} from './eventConstants';
+import {  CREATE_EVENT, UPDATE_EVENT, DELETE_EVENT, FETCH_EVENTS} from './eventConstants';
 
  const initialState = [];
 
@@ -17,8 +17,14 @@ import {  CREATE_EVENT, UPDATE_EVENT, DELETE_EVENT} from './eventConstants';
       return [...state.filter(event => event.id !== payload.eventId)];
   }
 
+
+  export const fetchEvents = (state, payload) => {
+    return payload.events; //this populates our initial state with the events in our payload
+  }
+
   export default createReducer(initialState, {  //here we passed our initial state and then added our lookup table which is the second parameter that matches each action with its corresponding function
       [CREATE_EVENT] : createEvent,
       [UPDATE_EVENT] : updateEvent,
-      [DELETE_EVENT] : deletEvent 
+      [DELETE_EVENT] : deletEvent,
+      [FETCH_EVENTS]: fetchEvents
   });
