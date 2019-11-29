@@ -8,6 +8,14 @@ class EventDetailedInfo extends Component {
     showMap: false
   };
 
+
+  //this sets the showMap property to false after the component has been destroyed, that is when you navigate to another component
+  componentWillUnmount(){
+    this.setState({
+      showMap: false
+    })
+  }
+
   showMapToggle = () => {
     this.setState(prevState => ({
       // the prevState paramter is used to get the prevState, because whatever we will be changing relies on what the prevState was this probably used to toggle the state value to true or false
