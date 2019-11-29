@@ -26,7 +26,7 @@ export const asyncActionError = state => {
 
 
 export default createReducer(initialState, {
-[ASYNC_ACTION_START]: asyncActionStart,
-[ASYNC_ACTION_FINISH]: asyncActionFinish,
+[ASYNC_ACTION_START]: asyncActionStarted,
+[ASYNC_ACTION_FINISH]: asyncActionFinished,
 [ASYNC_ACTION_ERROR]: asyncActionError
 });
