@@ -4,7 +4,6 @@ import {
   ASYNC_ACTION_FINISH,
   ASYNC_ACTION_START
 } from "./asyncConstants";
-import { asyncActionStart, asyncActionFinish } from "./asyncActions";
 
 const initialState = {
   loading: false

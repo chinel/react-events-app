@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
+import { firestoreConnect } from 'react-redux-firebase';
 import EventList from "../EventList/EventList";
 import { connect } from "react-redux";
 import {deleteEvent } from "../eventActions";
@@ -7,8 +8,8 @@ import LoadingComponent from '../../../app/layout/LoadingComponent';
 import EventActivity from "../EventActivity/EventActivity";
 
 const mapState = state => ({
-  events: state.events,
-  loading: state.async.loading
+  events: state.firestore.ordered.events,
+  loading: state.async.loading,
 });
 
 const actions = {
@@ -82,6 +83,7 @@ class EventDashboard extends Component {
 
   render() {
     const  {events, loading} = this.props;
+    console.log(loading);
     if (loading) return <LoadingComponent inverted={true}/> /*Setting the inverted property to true changes the default dark overlay to a white one*/
     return (
       <Grid>
@@ -102,4 +104,5 @@ class EventDashboard extends Component {
 export default connect(
   mapState,
   actions
-)(EventDashboard);
+)(firestoreConnect([{collection: 'events'}])(EventDashboard));
+//The firestore connect higher order component here acts more of like a listener here for our events collections

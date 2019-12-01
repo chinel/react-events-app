@@ -13,7 +13,7 @@ import ScrollToTop from "./app/common/util/ScrollToTop";
 import { loadEvents } from './features/event/eventActions';
 
 const store = configureStore();
-store.dispatch(loadEvents());
+//Since we will be getting our event data from the store we no longer need this, which was used initially to load data from a mock api store.dispatch(loadEvents());
 const rootEl = document.getElementById("root");
 
 let render = () => {
