@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {  withFirebase} from 'react-redux-firebase';
 import { connect } from "react-redux";
 import { NavLink, Link, withRouter } from "react-router-dom";
 import { Menu, Container, Button } from "semantic-ui-react";
@@ -14,7 +15,8 @@ const actions = {
 };
 
 const mapState = (state) => ({
-  auth: state.auth
+  /*auth: state.auth // we will have to use the auth in firebase reducer as opposed to this*/
+  auth: state.firebase.auth 
 })
 
 class NavBar extends Component {
@@ -29,16 +31,18 @@ class NavBar extends Component {
   };
 
   handleSignOut = () => {
-    this.props.signOutUser();
+  /*   this.props.signOutUser(); Because we are using withFirebase higher order component we will be making use of the logout function from it */
   /*   this.setState({
       authenticated: false
     }); */
+    this.props.firebase.logout();
     this.props.history.push("/");
   };
 
   render() {
     const { auth } = this.props;
-    const authenticated = auth.authenticated
+    /* const authenticated = auth.authenticated  we will be checking if the user is authenticated from firebase as shown below*/
+    const authenticated = auth.isLoaded && !auth.isEmpty;//this checks if the auth is loaded and if the auth is not empty from firebase
     return (
       <Menu inverted fixed="top">
         <Container>
@@ -67,7 +71,7 @@ class NavBar extends Component {
           )}
 
           {authenticated ? (
-            <SignedInMenu currentUser={auth.currentUser} signOut={this.handleSignOut} />
+            <SignedInMenu /* currentUser={auth.currentUser} we will be passing auth details from firebase*/ auth={auth} signOut={this.handleSignOut} />
           ) : (
             <SignedOutMenu
               signIn={this.handleSignIn}
@@ -80,4 +84,4 @@ class NavBar extends Component {
   }
 }
 
-export default withRouter(connect(mapState, actions)(NavBar));
+export default withRouter(withFirebase(connect(mapState, actions)(NavBar)));
