@@ -7,7 +7,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import firebase from "../config/firebase";
 
 const rrfconfig = {
-  userProfile: "user",
+  userProfile: "users",
   attachAuthIsReady: true,
   useFirestoreForProfile: true
 };
