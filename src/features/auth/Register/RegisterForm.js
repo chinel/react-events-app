@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { combineValidators, isRequired } from 'revalidate';
-import { Form, Segment, Button, Label } from 'semantic-ui-react';
+import { Form, Segment, Button, Label, Divider } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import TextInput from '../../../app/common/form/TextInput';
 import { registerUser } from '../authActions';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const actions = {
   registerUser
@@ -39,6 +40,8 @@ const RegisterForm = ({handleSubmit, registerUser, invalid, submitting, error}) 
             component={TextInput}
             placeholder="Password"
           />
+              <Divider horizontal>Or</Divider>
+              <SocialLogin/> {/*Here the social login still shown login because the idea is to allow the user to register and login at the same time */}
               {error && <Label basic color="red">{error}</Label>}
           <Button disabled={invalid || submitting} fluid size="large" color="teal">
             Register
