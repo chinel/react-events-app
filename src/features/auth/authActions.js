@@ -64,6 +64,11 @@ export const registerUser = (user) =>
 
 
      } catch (error) {
+       //Firebase by default does not support duplicate registration, if user exist it throws an error
        console.log(error);
+       throw new SubmissionError({
+        _error: error.message 
+       
+      })
      }
   }

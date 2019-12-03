@@ -74,7 +74,7 @@ const validate = combineValidators({
       message: "Description has to be at least 5 characters"
     })
   )(),
-  city: isRequired("city"),
+  city: isRequired("city"),//this is the default if you don;t want to specify your custom message
   venue: isRequired("venue"),
   date: isRequired("date")
 });
