@@ -6,11 +6,11 @@ import { Menu, Container, Button } from "semantic-ui-react";
 import SignedOutMenu from "../Menu/SignedOutMenu";
 import SignedInMenu from "../Menu/SignedInMenu";
 import { openModal } from "../../modals/modalActions";
-import { signOutUser } from '../../auth/authActions';
+/* import { signOutUser } from '../../auth/authActions'; */
 
 const actions = {
   openModal,
-  signOutUser
+ /*  signOutUser */
 
 };
 
