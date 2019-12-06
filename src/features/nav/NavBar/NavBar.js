@@ -16,7 +16,8 @@ const actions = {
 
 const mapState = (state) => ({
   /*auth: state.auth // we will have to use the auth in firebase reducer as opposed to this*/
-  auth: state.firebase.auth 
+  auth: state.firebase.auth,
+  profile: state.firebase.profile
 })
 
 class NavBar extends Component {
@@ -40,7 +41,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const { auth } = this.props;
+    const { auth, profile } = this.props;
     /* const authenticated = auth.authenticated  we will be checking if the user is authenticated from firebase as shown below*/
     const authenticated = auth.isLoaded && !auth.isEmpty;//this checks if the auth is loaded and if the auth is not empty from firebase
     return (
@@ -71,7 +72,7 @@ class NavBar extends Component {
           )}
 
           {authenticated ? (
-            <SignedInMenu /* currentUser={auth.currentUser} we will be passing auth details from firebase*/ auth={auth} signOut={this.handleSignOut} />
+            <SignedInMenu /* currentUser={auth.currentUser} we will be passing auth details from firebase*/ profile={profile} signOut={this.handleSignOut} />
           ) : (
             <SignedOutMenu
               signIn={this.handleSignIn}
