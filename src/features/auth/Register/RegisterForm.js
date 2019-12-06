@@ -40,12 +40,13 @@ const RegisterForm = ({handleSubmit, registerUser, invalid, submitting, error}) 
             component={TextInput}
             placeholder="Password"
           />
-              <Divider horizontal>Or</Divider>
-              <SocialLogin/> {/*Here the social login still shown login because the idea is to allow the user to register and login at the same time */}
-              {error && <Label basic color="red">{error}</Label>}
+             {error && <Label basic color="red">{error}</Label>}
           <Button disabled={invalid || submitting} fluid size="large" color="teal">
             Register
           </Button>
+          <Divider horizontal>Or</Divider>
+              <SocialLogin/> {/*Here the social login still shown login because the idea is to allow the user to register and login at the same time */}
+              
         </Segment>
       </Form>
     </div>
