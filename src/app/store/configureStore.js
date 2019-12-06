@@ -9,7 +9,8 @@ import firebase from "../config/firebase";
 const rrfconfig = {
   userProfile: "users",
   attachAuthIsReady: true,
-  useFirestoreForProfile: true //this allows us to use the firstore profile as user profile instead of the auth information as the auth profile information takes a while to update you have to logout and login back
+  useFirestoreForProfile: true, //this allows us to use the firstore profile as user profile instead of the auth information as the auth profile information takes a while to update you have to logout and login back
+  updateProfileOnLogin: false // this prevents the users firestore profile from updating each time the user logs in
 };
 
 export const configureStore = preloadedState => {

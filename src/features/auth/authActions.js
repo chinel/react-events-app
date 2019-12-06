@@ -93,7 +93,7 @@ export const socialLogin = selectedProvider => async (
 
     //Here we check if the user is a new user and then store some of the user;s information in firestore as well
     //But this not prevent firebase from saving the users profile in firestore if the user is not a new user
-    // You stiil need to add a configuration to the store to handle this in the rrconfig object
+    // You stiil need to add a configuration to the store to handle this in the rrconfig object set updateProfileOnLogin: false
     if(user.additionalUserInfo.isNewUser){
       await firestore.set(`users/${user.user.uid}`,{
         displayName: user.profile.displayName,
