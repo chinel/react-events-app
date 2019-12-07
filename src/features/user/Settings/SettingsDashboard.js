@@ -1,4 +1,5 @@
 import React from 'react';
+import {  connect } from 'react-redux';
 import { Grid } from 'semantic-ui-react';
 import SettingsNav from './SettingsNav';
 import { Switch, Route, Redirect} from 'react-router-dom'
@@ -6,8 +7,13 @@ import AboutPage from './AboutPage';
 import AccountPage from './AccountPage';
 import BasicPage from './BasicPage';
 import PhotosPage from './PhotosPage';
+import { updatePassword } from '../../auth/authActions';
 
-const SettingsDashboard = () => {
+const actions = {
+updatePassword
+}
+
+const SettingsDashboard = ({updatePassword}) => {
     return (
         <Grid>
             <Grid.Column width={12}>
@@ -16,7 +22,8 @@ const SettingsDashboard = () => {
                     <Route path="/settings/basic" component={BasicPage}/>
                     <Route path="/settings/about" component={AboutPage}/>
                     <Route path="/settings/photos" component={PhotosPage}/>
-                    <Route path="/settings/account" component={AccountPage}/>
+                    {/*If you want to pass props to a component via a route you need to render the component instead of just stating the component so that you can pass down props to the component */}
+                    <Route path="/settings/account" render={() => <AccountPage updatePassword={updatePassword}/>}/>
                 </Switch>
            
             </Grid.Column>
@@ -28,4 +35,4 @@ const SettingsDashboard = () => {
     )
 }
 
-export default SettingsDashboard
+export default connect(null, actions)(SettingsDashboard);

@@ -1,6 +1,7 @@
 import { LOGIN_USER, SIGN_OUT_USER } from "./authConstants";
-import { SubmissionError } from "redux-form";
+import { SubmissionError, reset } from "redux-form";
 import { closeModal } from "../modals/modalActions";
+import { toastr } from 'react-redux-toastr';
 
 /* export const login = creds => {
   return dispatch => {
@@ -105,3 +106,21 @@ export const socialLogin = selectedProvider => async (
     console.log(error);
   }
 };
+
+
+
+export const updatePassword = (creds) =>
+ async (dispatch, getState,{getFirebase}) => {
+   const firebase = getFirebase();
+   const user = firebase.auth().currentUser;
+   try {
+        await user.updatePassword(creds.newPassword1);
+        await dispatch(reset('account'));//this reset method is from redux form it helps to reset the fields after submission the parameter is the name of the form
+        toastr.success('Success','Your Password has been updated');
+      } catch (error) {
+     console.log(error);
+     throw new SubmissionError({
+       _error:error.message
+     })
+   }
+ } 
