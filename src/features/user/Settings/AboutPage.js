@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import RadioInput from '../../../app/common/form/RadioInput';
 import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
-import PlaceInput from '../../../app/common/form/PlaceInput';
+import PlacesInput from '../../../app/common/form/PlacesInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 
 const interests = [
@@ -16,12 +16,12 @@ const interests = [
   { key: 'travel', text: 'Travel', value: 'travel' }
 ];
 
-const About = ({ pristine, submitting }) => {
+const AboutPage = ({ pristine, submitting,updateProfile, handleSubmit }) => {
   return (
     <Segment>
       <Header dividing size="large" content="About Me" />
       <p>Complete your profile to get the most out of this site</p>
-      <Form>
+      <Form onSubmit={handleSubmit(updateProfile)}>
         <Form.Group inline>
           <label>Tell us your status: </label>
           <Field name="status" component={RadioInput} type="radio" value="single" label="Single" />
@@ -61,8 +61,8 @@ const About = ({ pristine, submitting }) => {
         <Field
           width={8}
           name="origin"
-          options={{ types: ['(regions)'] }}
-          component={PlaceInput}
+          options={{ types: ['(regions)'] }} 
+          component={PlacesInput}
           placeholder="Country of Origin"
         />
         <Divider />
@@ -71,5 +71,5 @@ const About = ({ pristine, submitting }) => {
     </Segment>
   );
 };
-
-export default reduxForm({ form: 'userProfile', enableReinitialize: true })(About);
+{/* For the country of origin setting the options to regions is the only option closest to listing out just countries for now*/}
+export default reduxForm({ form: 'userProfile', enableReinitialize: true })(AboutPage);

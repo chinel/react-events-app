@@ -29,7 +29,7 @@ const SettingsDashboard = ({updatePassword, providerId, user, updateProfile}) =>
                     <Redirect exact from="/settings" to="/settings/basic"/>
                     {/*Here setting the initialValues in this component you do not need to call it inside of the component whatever property field name you have here is mapped to the field names in this component */}
                     <Route path="/settings/basic" render={() => <BasicPage updateProfile={updateProfile} initialValues={user}/>} />
-                    <Route path="/settings/about" component={AboutPage}/>
+                    <Route path="/settings/about" render={() => <AboutPage updateProfile={updateProfile} />}/>
                     <Route path="/settings/photos" component={PhotosPage}/>
                     {/*If you want to pass props to a component via a route you need to render the component instead of just stating the component so that you can pass down props to the component */}
                     <Route path="/settings/account"  render={() => <AccountPage updatePassword={updatePassword} providerId={providerId}/>} />
