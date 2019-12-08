@@ -8,9 +8,11 @@ import AccountPage from './AccountPage';
 import BasicPage from './BasicPage';
 import PhotosPage from './PhotosPage';
 import { updatePassword } from '../../auth/authActions';
+import { updateProfile } from '../userActions';
 
 const actions = {
-updatePassword
+updatePassword,
+updateProfile
 }
 
 const mapState = (state) => ({
@@ -18,7 +20,7 @@ const mapState = (state) => ({
  user: state.firebase.profile
 });
 
-const SettingsDashboard = ({updatePassword, providerId, user}) => {
+const SettingsDashboard = ({updatePassword, providerId, user, updateProfile}) => {
     return (
         <Grid>
             <Grid.Column width={12}>
@@ -26,7 +28,7 @@ const SettingsDashboard = ({updatePassword, providerId, user}) => {
                 <Switch>
                     <Redirect exact from="/settings" to="/settings/basic"/>
                     {/*Here setting the initialValues in this component you do not need to call it inside of the component whatever property field name you have here is mapped to the field names in this component */}
-                    <Route path="/settings/basic" render={() => <BasicPage initialValues={user}/>} />
+                    <Route path="/settings/basic" render={() => <BasicPage updateProfile={updateProfile} initialValues={user}/>} />
                     <Route path="/settings/about" component={AboutPage}/>
                     <Route path="/settings/photos" component={PhotosPage}/>
                     {/*If you want to pass props to a component via a route you need to render the component instead of just stating the component so that you can pass down props to the component */}
