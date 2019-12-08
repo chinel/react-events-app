@@ -68,6 +68,6 @@ class BasicPage extends Component {
     }
 }
 
-export default reduxForm({form: 'userProfile',enableReinitialize: true})(BasicPage);
+export default reduxForm({form: 'userProfile',enableReinitialize: true, destroyOnUnmount: false})(BasicPage);
 //here enabling reinitialize to true is used when the form will be used as an edit form or needs to have an initial value set, this makes the value available immediately after the page is refreshed
  /*This is set to only allow people 18 years and higher, am talking of the maxDate and using moment to get support  */

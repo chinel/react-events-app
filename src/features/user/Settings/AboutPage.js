@@ -72,4 +72,4 @@ const AboutPage = ({ pristine, submitting,updateProfile, handleSubmit }) => {
   );
 };
 {/* For the country of origin setting the options to regions is the only option closest to listing out just countries for now*/}
-export default reduxForm({ form: 'userProfile', enableReinitialize: true })(AboutPage);
+export default reduxForm({ form: 'userProfile', enableReinitialize: true, destroyOnUnmount: false})(AboutPage);
