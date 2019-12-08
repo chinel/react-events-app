@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import {Image, Segment, Header, Divider, Grid, Button, Card} from 'semantic-ui-react';
+import {Image, Segment, Header, Divider, Grid, Button, Card, Icon} from 'semantic-ui-react';
+import Dropzone from 'react-dropzone';
 
 class PhotosPage extends Component {
+    
     render() {
         return (
             <Segment>
@@ -10,6 +12,12 @@ class PhotosPage extends Component {
                     <Grid.Row />
                     <Grid.Column width={4}>
                         <Header color='teal' sub content='Step 1 - Add Photo'/>
+                        <Dropzone>
+                            <div style={{paddingTop: '30px', textAlign: 'center'}}>
+                            <Icon name="upload" size="huge"/> 
+                           <Header content="Drop image here or click to add"/>
+                            </div>
+                        </Dropzone>
                     </Grid.Column>
                     <Grid.Column width={1} />
                     <Grid.Column width={4}>
