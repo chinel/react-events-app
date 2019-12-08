@@ -285,3 +285,5 @@ export default connect(
     EventForm
   )
 );
+
+//here enabling reinitialize to true is used when the form will be used as an edit form or needs to have an initial value set, this makes the value available immediately after the page is refreshed

@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import {Segment, Form, Header, Divider, Button} from 'semantic-ui-react';
 import {Field, reduxForm} from 'redux-form';
 import DateInput from "../../../app/common/form/DateInput";
-import PlaceInput from "../../../app/common/form/PlaceInput";
+import PlacesInput from "../../../app/common/form/PlacesInput";
 import TextInput from "../../../app/common/form/TextInput";
 
-class Basics extends Component {
+class BasicPage extends Component {
 
     render() {
         const {pristine, submitting} = this.props;
@@ -34,7 +34,7 @@ class Basics extends Component {
                         placeholder='Home Town'
                         options={{types: ['(cities)']}}
                         label='Female'
-                        component={PlaceInput}
+                        component={PlacesInput}
                         width={8}
                     />
                     <Divider/>
@@ -45,4 +45,5 @@ class Basics extends Component {
     }
 }
 
-export default reduxForm({form: 'userProfile'})(Basics);
+export default reduxForm({form: 'userProfile',enableReinitialize: true})(BasicPage);
+//here enabling reinitialize to true is used when the form will be used as an edit form or needs to have an initial value set, this makes the value available immediately after the page is refreshed
