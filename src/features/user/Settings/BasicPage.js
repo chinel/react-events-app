@@ -5,6 +5,7 @@ import DateInput from "../../../app/common/form/DateInput";
 import PlacesInput from "../../../app/common/form/PlacesInput";
 import TextInput from "../../../app/common/form/TextInput";
 import RadioInput from '../../../app/common/form/RadioInput';
+import moment from 'moment';
 
 class BasicPage extends Component {
 
@@ -22,6 +23,7 @@ class BasicPage extends Component {
                         placeholder='Known As'
                     />
                     <Form.Group inline>
+                        <label>Gender:</label>
                      <Field
                      name="gender"
                      type="radio"
@@ -42,7 +44,14 @@ class BasicPage extends Component {
                         name='dateOfBirth'
                         component={DateInput}
                         placeholder='Date of Birth'
+                        dateFormat ="YYYY-MM-DD"
+                        showYearDropdown = {true}
+                        showMonthDropdown={true}
+                        dropDownMode="select"
+                        maxDate={moment().subtract(18, 'years')}
+
                     />
+                   
                     <Field
                         name='city'
                         placeholder='Home Town'
@@ -61,3 +70,4 @@ class BasicPage extends Component {
 
 export default reduxForm({form: 'userProfile',enableReinitialize: true})(BasicPage);
 //here enabling reinitialize to true is used when the form will be used as an edit form or needs to have an initial value set, this makes the value available immediately after the page is refreshed
+ /*This is set to only allow people 18 years and higher, am talking of the maxDate and using moment to get support  */
