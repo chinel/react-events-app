@@ -12,10 +12,12 @@ const validate = combineValidators({
     )() //note whenever you are using composeValidators you have to ensure you add this () at the end to execute it,else it won;t work
 });
 
-const Account = ({ error , invalid, submitting, handleSubmit, updatePassword}) => {
+const Account = ({ error , invalid, submitting, handleSubmit, updatePassword,providerId}) => {
   return (
     <Segment>
       <Header dividing size="large" content="Account" />
+      {providerId}
+      {providerId && providerId === "password" && 
       <div>
         <Header color="teal" sub content="Change password" />
         <p>Use this form to update your account settings</p>
@@ -49,7 +51,9 @@ const Account = ({ error , invalid, submitting, handleSubmit, updatePassword}) =
           <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
         </Form>
       </div>
+}
 
+{providerId && providerId === "facebook.com" && 
       <div>
         <Header color="teal" sub content="Facebook Account" />
         <p>Please visit Facebook to update your account settings</p>
@@ -58,7 +62,8 @@ const Account = ({ error , invalid, submitting, handleSubmit, updatePassword}) =
           Go to Facebook
         </Button>
       </div>
-
+}
+{providerId && providerId === "google.com" && 
       <div>
         <Header color="teal" sub content="Google Account" />
         <p>Please visit Google to update your account settings</p>
@@ -67,6 +72,7 @@ const Account = ({ error , invalid, submitting, handleSubmit, updatePassword}) =
           Go to Google
         </Button>
       </div>
+}
     </Segment>
   );
 };
