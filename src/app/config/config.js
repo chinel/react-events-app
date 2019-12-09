@@ -1,1 +1,1 @@
-export const appConfig = {googleMapApiKey: 'YOUR API KEY HERE'}
+export const appConfig = {googleMapApiKey: 'AIzaSyBcM6uLV_zM-23FolzhjeWvKMaRlCTe95M'}
