@@ -20,6 +20,7 @@ import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
 import moment from "moment";
 import PlacesInput from "../../../app/common/form/PlacesInput";
+import { appConfig } from "../../../app/config/config";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -178,7 +179,7 @@ class EventForm extends Component {
     return (
       <Grid>
         <Script
-          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcM6uLV_zM-23FolzhjeWvKMaRlCTe95M&libraries=places"
+          url={`https://maps.googleapis.com/maps/api/js?key=${appConfig.googleMapApiKey}&libraries=places`}
           onLoad={this.handleScriptLoaded}
         />
         <Grid.Column width={10}>
