@@ -26,6 +26,52 @@ export const updateProfile = user =>
         }
     }
 
+    export const uploadProfileImage = (file, filename) => 
+        async (dispatch, getState,{getFirebase, getFirestore}) => {
+            const firebase = getFirebase();
+            const firestore = getFirestore();
+            const user = firebase.auth().currentUser; //this is a synchronous function so you don't need to use await
+            const path = `${user.uid}/user_images`; //this is the path where images will be stored in the firestore storage each user whill have a path which consist of the user;s uid and user_images
+            const options = {
+                name: filename
+            };
+            try {
+                //step 1 - upload the file to firebase storage
+                let uploadedFile = await firebase.uploadedFile(path. file, null,options); //the third parameter is used if we want to save the image in firebase 
+                //step 2 - get the url of the image
+                let downloadUrl =  await uploadedFile.uploadTaskSnapshot.downloadUrl;
+                //step 3 - get the user doc
+                let userDoc =  await firestore.get(`users/${user.uid}`);
+                //step 4 - check if the user has photo, if not update the profile with new photo
+                if(!userDoc.data().photoURL){
+                 //Firebase update profile
+                  await firebase.updateProfile({
+                      photoURL: downloadUrl
+                  });
+                  //Update authenticated user profile
+                  await user.updateProfile({
+                      photoURL: downloadUrl
+                  })
+
+                }
+                  
+                //add the new photo to photo collections
+                return await firestore.add({
+                    collection: 'users',
+                    doc: user.uid,
+                    subcollections: [{collection: 'photos'}]
+                },{
+                    name: filename,
+                    url: downloadUrl
+                })
+            } catch (error) {
+                console.log(error);
+                throw new Error('Problem uploadin photos');
+            } 
+
+
+        }
+
 
   //Also note that the interest field that is saved to firestore user is saved as an array if you intend to make changes to specific fields in the array
   //this will be impossible for now it always updates the entire array and also if you decide to ffind out users
