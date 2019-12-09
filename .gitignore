@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 /src/features/testarea/*
-/src/app/config/config.js
+/src/app/config/*
 /.pnp
 .pnp.js
 
