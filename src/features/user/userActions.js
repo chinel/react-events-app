@@ -37,20 +37,22 @@ export const updateProfile = user =>
             };
             try {
                 //step 1 - upload the file to firebase storage
-                let uploadedFile = await firebase.uploadedFile(path. file, null,options); //the third parameter is used if we want to save the image in firebase 
+                let uploadedFile = await firebase.uploadFile(path, file, null,options); //the third parameter is used if we want to save the image in firebase 
                 //step 2 - get the url of the image
-                let downloadUrl =  await uploadedFile.uploadTaskSnapshot.downloadUrl;
+                let downloadURL =  await uploadedFile.uploadTaskSnapshot.downloadURL;
                 //step 3 - get the user doc
                 let userDoc =  await firestore.get(`users/${user.uid}`);
                 //step 4 - check if the user has photo, if not update the profile with new photo
-                if(!userDoc.data().photoURL){
+                console.log(userDoc);
+                ////console.log(userDoc.data());
+                if(!userDoc.data().photoURL){//the reason we are using the data function to retrieve the PhotoURL is because the userDoc returns a snapshot
                  //Firebase update profile
                   await firebase.updateProfile({
-                      photoURL: downloadUrl
+                      photoURL: downloadURL
                   });
                   //Update authenticated user profile
                   await user.updateProfile({
-                      photoURL: downloadUrl
+                      photoURL: downloadURL
                   })
 
                 }
@@ -62,11 +64,11 @@ export const updateProfile = user =>
                     subcollections: [{collection: 'photos'}]
                 },{
                     name: filename,
-                    url: downloadUrl
+                    url: downloadURL
                 })
             } catch (error) {
                 console.log(error);
-                throw new Error('Problem uploadin photos');
+                throw new Error('Problem uploading photos');
             } 
 
 
