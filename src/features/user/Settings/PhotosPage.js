@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux'
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 import {
   Image,
   Segment,
@@ -16,27 +16,28 @@ import Dropzone from "react-dropzone";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { uploadProfileImage } from "../userActions";
-import {toastr} from 'react-redux-toastr';
+import { toastr } from "react-redux-toastr";
 
-const query = ({auth}) => {
-  return  [
+const query = ({ auth }) => {
+  return [
     {
-      collection: 'users',
+      collection: "users",
       doc: auth.uid,
-      subcollections: [{collection: 'photos'}],
-      storeAs: 'photos'
+      subcollections: [{ collection: "photos" }],
+      storeAs: "photos"
     }
-  ]
-}
+  ];
+};
 
 const actions = {
   uploadProfileImage
 };
 
-const mapState = (state) => ({
+const mapState = state => ({
   auth: state.firebase.auth,
-  profile: state.firebase.profile // As we will be needing to the get the authenticated user's profile image
-})
+  profile: state.firebase.profile, // As we will be needing to the get the authenticated user's profile image
+  photos: state.firestore.ordered.photos //Having gotten the authenticated user's photo from firestore into our firestore reducer  from passing a query to firestoreConnect we can now retrieve the photos for display
+});
 
 class PhotosPage extends Component {
   state = {
@@ -52,22 +53,21 @@ class PhotosPage extends Component {
       await this.props.uploadProfileImage(
         this.state.image,
         this.state.fileName
-      );// we used await to make sure that this function coompleted before any other
+      ); // we used await to make sure that this function coompleted before any other
 
-     this.cancelCrop();
-     toastr.success('Success','Photo has been uploaded');
+      this.cancelCrop();
+      toastr.success("Success", "Photo has been uploaded");
     } catch (error) {
-        toastr.error('Oops',error.message);
+      toastr.error("Oops", error.message);
     }
   };
 
-
-  cancelCrop = () =>{
-      this.setState({
-          files:[],
-          image:{}
-      })
-  }
+  cancelCrop = () => {
+    this.setState({
+      files: [],
+      image: {}
+    });
+  };
 
   cropImage = () => {
     if (typeof this.refs.cropper.getCroppedCanvas() === "undefined") {
@@ -91,6 +91,7 @@ class PhotosPage extends Component {
   };
 
   render() {
+    const { photos, profile } = this.props;
     return (
       <Segment>
         <Header dividing size="large" content="Your Photos" />
@@ -129,14 +130,23 @@ class PhotosPage extends Component {
             <Header sub color="teal" content="Step 3 - Preview and Upload" />
             {this.state.files[0] && (
               <div>
-                  <Image
-                style={{ minHeight: "200px", minWidth: "200px" }}
-                src={this.state.cropResult}
-              />
-              <Button.Group>
-                  <Button onClick={this.uploadImage} style={{width: '100px'}} positive icon="check"/>
-                  <Button onClick={this.cancelCrop} style={{width: '100px'}} icon="close"/>
-              </Button.Group>
+                <Image
+                  style={{ minHeight: "200px", minWidth: "200px" }}
+                  src={this.state.cropResult}
+                />
+                <Button.Group>
+                  <Button
+                    onClick={this.uploadImage}
+                    style={{ width: "100px" }}
+                    positive
+                    icon="check"
+                  />
+                  <Button
+                    onClick={this.cancelCrop}
+                    style={{ width: "100px" }}
+                    icon="close"
+                  />
+                </Button.Group>
               </div>
             )}
             {/*The preview comes from the dropzone iamge which does allow us to preview the image */}
@@ -148,19 +158,22 @@ class PhotosPage extends Component {
 
         <Card.Group itemsPerRow={5}>
           <Card>
-            <Image src="https://randomuser.me/api/portraits/men/20.jpg" />
+            <Image src={profile.photoURL} />
             <Button positive>Main Photo</Button>
           </Card>
 
-          <Card>
-            <Image src="https://randomuser.me/api/portraits/men/20.jpg" />
-            <div className="ui two buttons">
-              <Button basic color="green">
-                Main
-              </Button>
-              <Button basic icon="trash" color="red" />
-            </div>
-          </Card>
+          {photos &&
+            photos.map(photo => (
+              <Card key={photo.id}>
+                <Image src={photo.url} />
+                <div className="ui two buttons">
+                  <Button basic color="green">
+                    Main
+                  </Button>
+                  <Button basic icon="trash" color="red" />
+                </div>
+              </Card>
+            ))}
         </Card.Group>
       </Segment>
     );
@@ -171,3 +184,5 @@ export default compose(
   connect(mapState, actions),
   firestoreConnect(auth => query(auth))
 )(PhotosPage);
+
+//This process of connecting to firestore also does allows us to listent to changes in the photos collections
