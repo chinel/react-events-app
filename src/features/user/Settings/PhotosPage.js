@@ -92,6 +92,13 @@ class PhotosPage extends Component {
 
   render() {
     const { photos, profile } = this.props;
+    let filteredPhotos;
+    //this will help to check if there are photos and will filter out the main profile photo from the photos collections
+    if(photos){
+      filteredPhotos = photos.filter(photo => {
+        return photo.url !== profile.photoURL
+      })
+    }
     return (
       <Segment>
         <Header dividing size="large" content="Your Photos" />
@@ -163,7 +170,7 @@ class PhotosPage extends Component {
           </Card>
 
           {photos &&
-            photos.map(photo => (
+            filteredPhotos.map(photo => (
               <Card key={photo.id}>
                 <Image src={photo.url} />
                 <div className="ui two buttons">
