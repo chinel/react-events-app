@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux'
 import {
   Image,
   Segment,
@@ -14,10 +16,27 @@ import Dropzone from "react-dropzone";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { uploadProfileImage } from "../userActions";
-import {toastr} from 'react-redux-toastr'
+import {toastr} from 'react-redux-toastr';
+
+const query = ({auth}) => {
+  return  [
+    {
+      collection: 'users',
+      doc: auth.uid,
+      subcollections: [{collection: 'photos'}],
+      storeAs: 'photos'
+    }
+  ]
+}
+
 const actions = {
   uploadProfileImage
 };
+
+const mapState = (state) => ({
+  auth: state.firebase.auth,
+  profile: state.firebase.profile // As we will be needing to the get the authenticated user's profile image
+})
 
 class PhotosPage extends Component {
   state = {
@@ -148,4 +167,7 @@ class PhotosPage extends Component {
   }
 }
 
-export default connect(null, actions)(PhotosPage);
+export default compose(
+  connect(mapState, actions),
+  firestoreConnect(auth => query(auth))
+)(PhotosPage);
