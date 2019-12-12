@@ -38,7 +38,8 @@ const actions = {
 const mapState = state => ({
   auth: state.firebase.auth,
   profile: state.firebase.profile, // As we will be needing to the get the authenticated user's profile image
-  photos: state.firestore.ordered.photos //Having gotten the authenticated user's photo from firestore into our firestore reducer  from passing a query to firestoreConnect we can now retrieve the photos for display
+  photos: state.firestore.ordered.photos, //Having gotten the authenticated user's photo from firestore into our firestore reducer  from passing a query to firestoreConnect we can now retrieve the photos for display
+  loading: state.async.loading
 });
 
 class PhotosPage extends Component {
@@ -114,7 +115,7 @@ class PhotosPage extends Component {
   };
 
   render() {
-    const { photos, profile } = this.props;
+    const { photos, profile, loading } = this.props;
     let filteredPhotos;
     //this will help to check if there are photos and will filter out the main profile photo from the photos collections
     if(photos){
@@ -166,12 +167,14 @@ class PhotosPage extends Component {
                 />
                 <Button.Group>
                   <Button
+                   loading={loading}
                     onClick={this.uploadImage}
                     style={{ width: "100px" }}
                     positive
                     icon="check"
                   />
                   <Button
+                    disabled={loading}
                     onClick={this.cancelCrop}
                     style={{ width: "100px" }}
                     icon="close"
@@ -188,7 +191,7 @@ class PhotosPage extends Component {
 
         <Card.Group itemsPerRow={5}>
           <Card>
-            <Image src={profile.photoURL} />
+            <Image src={profile.photoURL || '/assets/user.png'} />
             <Button positive>Main Photo</Button>
           </Card>
 
