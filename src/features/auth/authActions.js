@@ -39,8 +39,8 @@ export const login = creds => {
 
 //We don;t neccessarily have to put curly braces, if we leave this out it means we want to return something
 export const registerUser = user => async (
-  getState,
   dispatch,
+  getState,
   { getFirebase, getFirestore }
 ) => {
   const firebase = getFirebase();
@@ -65,7 +65,9 @@ export const registerUser = user => async (
     //the add will automatically generate an id while the set allows you to set your own id
     //we will be using the set method and using the uid from the firebase auth profile created
     await firestore.set(`users/${createdUser.uid}`, { ...newUser });
+    console.log("here1")
     dispatch(closeModal());
+    console.log('here2');
 
     //Is a lot cleaner to use the async await
   } catch (error) {

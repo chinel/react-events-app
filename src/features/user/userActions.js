@@ -2,6 +2,7 @@ import moment from "moment";
 import { toastr } from 'react-redux-toastr'
 import cuid from 'cuid';
 
+
 //Because we will be using firebase there will be no need
 //To create constants and reducer as we will be using the one provided by firebase
 
@@ -96,7 +97,20 @@ async(dispatch, getState,{getFirebase, getFirestore}) => {
         console.log(error);
         throw new Error('Problem deleting the photo');
     }
-}        
+}  
+
+//here we didn't add the bracket around the photo parameter because it is really not necessary if it is just one parameter
+export const setMainPhoto  = photo => 
+async(dispatch, getState,{getFirebase}) => {
+    const firebase = getFirebase();
+ try {
+      return await firebase.updateProfile({
+       photoURL:photo.url
+      });
+ } catch (error) {
+     throw new Error("Problem setting main photo")
+ }
+}
 
 
   //Also note that the interest field that is saved to firestore user is saved as an array if you intend to make changes to specific fields in the array

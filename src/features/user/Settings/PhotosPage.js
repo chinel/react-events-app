@@ -15,7 +15,7 @@ import {
 import Dropzone from "react-dropzone";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { uploadProfileImage, deletePhoto } from "../userActions";
+import { uploadProfileImage, deletePhoto, setMainPhoto } from "../userActions";
 import { toastr } from "react-redux-toastr";
 
 const query = ({ auth }) => {
@@ -31,7 +31,8 @@ const query = ({ auth }) => {
 
 const actions = {
   uploadProfileImage,
-  deletePhoto
+  deletePhoto,
+  setMainPhoto
 };
 
 const mapState = state => ({
@@ -48,7 +49,7 @@ class PhotosPage extends Component {
     image: {}
   };
 
-  //We have to make this an async method because we want to be sure that the image is uploaded before we can alert to the user that the image is uploaded
+  //We have to make this an async method because we want to be sure that the image is uploaded before we can alert to the user that the image is uploaded and also if we want to get the error message that is thrown in the action
   uploadImage = async () => {
      // wrapping this in a try catch error allows us to catch the error from the uploadProfileImage action
      //And if there are any errors use toastr to display the errors
@@ -66,13 +67,23 @@ class PhotosPage extends Component {
   };
 
 
-  handlePhotoDelete = (photo) => () => {
+  handlePhotoDelete = (photo) => async => {
     try {
        this.props.deletePhoto(photo);
     } catch (error) {
       toastr.error('Oops', error.message)
     }
   }
+
+  handleSetMainPhoto = photo => async => {
+   try {
+      this.props.setMainPhoto(photo);
+   } catch (error) {
+     toastr.error('Oops', error.message);
+   }
+  }
+
+
 
   cancelCrop = () => {
     this.setState({
@@ -186,7 +197,7 @@ class PhotosPage extends Component {
               <Card key={photo.id}>
                 <Image src={photo.url} />
                 <div className="ui two buttons">
-                  <Button basic color="green">
+                  <Button onClick={this.handleSetMainPhoto(photo)} basic color="green">
                     Main
                   </Button>
                   <Button onClick={this.handlePhotoDelete(photo)} basic icon="trash" color="red" />
