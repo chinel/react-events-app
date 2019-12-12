@@ -77,7 +77,30 @@ export const updateProfile = user =>
         }
 
 
+export const deletePhoto = (photo) => 
+async(dispatch, getState,{getFirebase, getFirestore}) => {
+    //We will be deleting the image from both firebase and firestore
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    const user = firebase.auth().currentUser;
+
+
+    try {
+        await firebase.deleteFile(`${user.uid}/user_images/${photo.name}`);
+        await firestore.delete({
+         collection: 'users',
+         doc: user.uid,
+         subcollections: [{collection: 'photos', doc: photo.id}]
+        });
+    } catch (error) {
+        console.log(error);
+        throw new Error('Problem deleting the photo');
+    }
+}        
+
+
   //Also note that the interest field that is saved to firestore user is saved as an array if you intend to make changes to specific fields in the array
   //this will be impossible for now it always updates the entire array and also if you decide to ffind out users
   //Who share the same interest this will be impossible as well in firestore as the field is stores as an array
   //To be able to achieve this you have to save the fields as an object instead of an array  
+

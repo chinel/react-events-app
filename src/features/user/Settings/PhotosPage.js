@@ -15,7 +15,7 @@ import {
 import Dropzone from "react-dropzone";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { uploadProfileImage } from "../userActions";
+import { uploadProfileImage, deletePhoto } from "../userActions";
 import { toastr } from "react-redux-toastr";
 
 const query = ({ auth }) => {
@@ -30,7 +30,8 @@ const query = ({ auth }) => {
 };
 
 const actions = {
-  uploadProfileImage
+  uploadProfileImage,
+  deletePhoto
 };
 
 const mapState = state => ({
@@ -49,6 +50,8 @@ class PhotosPage extends Component {
 
   //We have to make this an async method because we want to be sure that the image is uploaded before we can alert to the user that the image is uploaded
   uploadImage = async () => {
+     // wrapping this in a try catch error allows us to catch the error from the uploadProfileImage action
+     //And if there are any errors use toastr to display the errors
     try {
       await this.props.uploadProfileImage(
         this.state.image,
@@ -61,6 +64,15 @@ class PhotosPage extends Component {
       toastr.error("Oops", error.message);
     }
   };
+
+
+  handlePhotoDelete = (photo) => () => {
+    try {
+       this.props.deletePhoto(photo);
+    } catch (error) {
+      toastr.error('Oops', error.message)
+    }
+  }
 
   cancelCrop = () => {
     this.setState({
@@ -177,7 +189,7 @@ class PhotosPage extends Component {
                   <Button basic color="green">
                     Main
                   </Button>
-                  <Button basic icon="trash" color="red" />
+                  <Button onClick={this.handlePhotoDelete(photo)} basic icon="trash" color="red" />
                 </div>
               </Card>
             ))}
