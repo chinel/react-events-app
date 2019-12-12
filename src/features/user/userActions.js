@@ -1,5 +1,6 @@
 import moment from "moment";
 import { toastr } from 'react-redux-toastr'
+import cuid from 'cuid';
 
 //Because we will be using firebase there will be no need
 //To create constants and reducer as we will be using the one provided by firebase
@@ -30,10 +31,11 @@ export const updateProfile = user =>
         async (dispatch, getState,{getFirebase, getFirestore}) => {
             const firebase = getFirebase();
             const firestore = getFirestore();
+            const imageName = cuid();
             const user = firebase.auth().currentUser; //this is a synchronous function so you don't need to use await
             const path = `${user.uid}/user_images`; //this is the path where images will be stored in the firestore storage each user whill have a path which consist of the user;s uid and user_images
             const options = {
-                name: filename
+                name: imageName
             };
             try {
                 //step 1 - upload the file to firebase storage
@@ -63,7 +65,7 @@ export const updateProfile = user =>
                     doc: user.uid,
                     subcollections: [{collection: 'photos'}]
                 },{
-                    name: filename,
+                    name: imageName,
                     url: downloadURL
                 })
             } catch (error) {
