@@ -72,7 +72,7 @@ class NavBar extends Component {
           )}
 
           {authenticated ? (
-            <SignedInMenu /* currentUser={auth.currentUser} we will be passing auth details from firebase*/ profile={profile} signOut={this.handleSignOut} />
+            <SignedInMenu auth={auth} /* currentUser={auth.currentUser} we will be passing auth details from firebase*/ profile={profile} signOut={this.handleSignOut} />
           ) : (
             <SignedOutMenu
               signIn={this.handleSignIn}
