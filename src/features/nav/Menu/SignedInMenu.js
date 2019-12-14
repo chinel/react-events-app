@@ -17,7 +17,7 @@ const SignedInMenu = ({signOut, currentUser, profile, auth/*auth from the auth p
           <Dropdown.Item text="Create Event" icon="plus" />
           <Dropdown.Item text="My Events" icon="calendar" />
           <Dropdown.Item text="My Network" icon="users" />
-          <Dropdown.Item as={Link} to={`profile/${auth.uid}`} text="My Profile" icon="user" />
+          <Dropdown.Item as={Link} to={`/profile/${auth.uid}`} text="My Profile" icon="user" />
           <Dropdown.Item as={Link} to="/settings" text="Settings" icon="settings" />
           <Dropdown.Item onClick={signOut} text="Sign Out" icon="power" />
         </Dropdown.Menu>
