@@ -59,12 +59,7 @@ class UserDetailedPage extends Component {
 
                     </Segment>
                 </Grid.Column>
-                <Grid.Column width={4}>
-                    <Segment>
-                        <Button color='teal' fluid basic content='Edit Profile'/>
-                    </Segment>
-                </Grid.Column>
-
+              
                <UserDetailedPhotos/>
                <UserDetailedEvents/>
             </Grid>
