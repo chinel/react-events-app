@@ -27,7 +27,7 @@ class PlacesInput extends Component {
       options,
       meta: { touched, error }
     } = this.props;
-    console.log(appConfig.googleMapApiKey);
+
     return (
       <Form.Field error={touched && !!error} width={width}>
         <Script

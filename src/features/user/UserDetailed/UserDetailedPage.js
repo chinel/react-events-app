@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { firestoreConnect, firebaseConnect } from 'react-redux-firebase';
+import { firestoreConnect } from 'react-redux-firebase';
 import {Grid} from "semantic-ui-react";
 import UserDetailedEvents from './UserDetailedEvents';
 import UserDetailedPhotos from './UserDetailedPhotos';
@@ -22,7 +22,8 @@ const query = ({auth}) =>  {
 }
 
 const mapState = (state) => ({
-  auth: state.firebase.auth
+  auth: state.firebase.auth,
+  profile: state.firebase.profile
 });
 
 
@@ -30,10 +31,10 @@ class UserDetailedPage extends Component {
 
 
     render() {
-
+     const {profile} = this.props;
         return (
             <Grid>
-                 <UserDetailedHeader/>
+                 <UserDetailedHeader profile={profile}/>
                 <UserDetailedDescription/>
                 <UserDetailedSidebar/>
                <UserDetailedPhotos/>
@@ -44,4 +45,4 @@ class UserDetailedPage extends Component {
     }
 }
 
-export default compose(connect(mapState), firebaseConnect(auth => query(auth)))(UserDetailedPage);
+export default compose(connect(mapState), firestoreConnect(auth => query(auth)))(UserDetailedPage);
