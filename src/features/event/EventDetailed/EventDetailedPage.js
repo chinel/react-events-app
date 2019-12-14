@@ -1,5 +1,6 @@
-import React from "react";
+import React, { Component } from 'react'
 import {  connect} from 'react-redux';
+import { withFirestore } from 'react-redux-firebase';
 import { Grid } from "semantic-ui-react";
 import EventDetailedHeader from "./EventDetailedHeader";
 import EventDetailedInfo from "./EventDetailedInfo";
@@ -21,9 +22,13 @@ const mapState = (state, ownProps) => { //Here ownProps is the props already ava
    }
 
 }
-const EventDetailedPage = ({event}) => {
-  return (
-    <Grid>
+
+
+class EventDetailedPage extends Component {
+  render() {
+    const {event} = this.props;
+    return (
+      <Grid>
       <Grid.Column width={10}>
         <EventDetailedHeader  event={event}/>
         <EventDetailedInfo event={event} />
@@ -33,7 +38,11 @@ const EventDetailedPage = ({event}) => {
         <EventDetailedSidebar attendees={event.attendees}/>
       </Grid.Column>
     </Grid>
-  );
-};
+    )
+  }
+}
 
-export default connect(mapState)(EventDetailedPage);
+
+
+//the withFirestore Higher order component provides us with firebase and firestore methods that we can use to do a whole lot
+export default withFirestore(connect(mapState)(EventDetailedPage));
