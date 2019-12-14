@@ -23,7 +23,8 @@ const query = ({auth}) =>  {
 
 const mapState = (state) => ({
   auth: state.firebase.auth,
-  profile: state.firebase.profile
+  profile: state.firebase.profile,
+  photos: state.firestore.ordered.photos
 });
 
 
@@ -31,13 +32,15 @@ class UserDetailedPage extends Component {
 
 
     render() {
-     const {profile} = this.props;
+     const {profile, photos} = this.props;
         return (
             <Grid>
                  <UserDetailedHeader profile={profile}/>
                 <UserDetailedDescription/>
                 <UserDetailedSidebar/>
-               <UserDetailedPhotos/>
+                {photos && photos.length > 0 &&
+               <UserDetailedPhotos photos={photos}/>
+                }
                <UserDetailedEvents/>
             </Grid>
 
