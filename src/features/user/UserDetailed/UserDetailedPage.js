@@ -4,6 +4,7 @@ import UserDetailedEvents from './UserDetailedEvents';
 import UserDetailedPhotos from './UserDetailedPhotos';
 import UserDetailedSidebar from './UserDetailedSidebar';
 import UserDetailedDescription from './UserDetailedDescription';
+import UserDetailedHeader from './UserDetailedHeader';
 
 class UserDetailedPage extends Component {
 
@@ -11,23 +12,7 @@ class UserDetailedPage extends Component {
 
         return (
             <Grid>
-                <Grid.Column width={16}>
-                    <Segment>
-                        <Item.Group>
-                            <Item>
-                                <Item.Image avatar size='small' src='https://randomuser.me/api/portraits/men/20.jpg'/>
-                                <Item.Content verticalAlign='bottom'>
-                                    <Header as='h1'>First Name</Header>
-                                    <br/>
-                                    <Header as='h3'>Occupation</Header>
-                                    <br/>
-                                    <Header as='h3'>27, Lives in London, UK</Header>
-                                </Item.Content>
-                            </Item>
-                        </Item.Group>
-
-                    </Segment>
-                </Grid.Column>
+                 <UserDetailedHeader/>
                 <UserDetailedDescription/>
                 <UserDetailedSidebar/>
                <UserDetailedPhotos/>
