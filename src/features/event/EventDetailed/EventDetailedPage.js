@@ -7,15 +7,17 @@ import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { toastr } from 'react-redux-toastr';
+import { objectToArray } from '../../../app/common/util/helpers';
 
 
-const mapState = (state, ownProps) => { //Here ownProps is the props already available to the component such as the history, match, location object if routing is applied and so on and so forth
-   const eventId = ownProps.match.params.id;
+const mapState = (state,/*  ownProps */) => { //Here ownProps is the props already available to the component such as the history, match, location object if routing is applied and so on and so forth
+   //const eventId = ownProps.match.params.id;   we would no longer be needing to use the match inside of here as it is used in the componentDidMount react lifecycle method already
 
    let event = {};
 
-   if(eventId && state.events.length > 0){
-       event = state.events.filter(event => event.id === eventId)[0];
+   if(state.firestore.ordered.events && state.firestore.ordered.events[0]){
+       //event = state.events.filter(event => event.id === eventId)[0];
+       event = state.firestore.ordered.events[0];
    }
 
    return{
@@ -41,6 +43,7 @@ class EventDetailedPage extends Component {
 
   render() {
     const {event} = this.props;
+    const attendees = event && event.attendees && objectToArray(event.attendees);//this check to see if there are events and if there are also attendees under the events then it uses the objectToArray helper method to convert it to an array
     return (
       <Grid>
       <Grid.Column width={10}>
@@ -49,7 +52,7 @@ class EventDetailedPage extends Component {
         <EventDetailedChat />
       </Grid.Column>
       <Grid.Column width={6}>
-        <EventDetailedSidebar attendees={event.attendees}/>
+        <EventDetailedSidebar attendees={attendees}/>
       </Grid.Column>
     </Grid>
     )
