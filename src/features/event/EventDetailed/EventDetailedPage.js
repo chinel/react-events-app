@@ -6,6 +6,7 @@ import EventDetailedHeader from "./EventDetailedHeader";
 import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
+import { toastr } from 'react-redux-toastr';
 
 
 const mapState = (state, ownProps) => { //Here ownProps is the props already available to the component such as the history, match, location object if routing is applied and so on and so forth
@@ -25,6 +26,19 @@ const mapState = (state, ownProps) => { //Here ownProps is the props already ava
 
 
 class EventDetailedPage extends Component {
+
+ async componentDidMount(){
+   const {firestore, match, history} = this.props;
+   let event = await firestore.get(`events/${match.params.id}`);
+   console.log(event);
+   if(!event.exists){
+    history.push('/events');
+    toastr.error("Sorry", "Event Not Found");
+   }
+
+  }
+
+
   render() {
     const {event} = this.props;
     return (
