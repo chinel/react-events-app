@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import Script from "react-load-script";
 import { connect } from "react-redux";
+import { withFirestore } from 'react-redux-firebase';
 import { reduxForm, Field } from "redux-form";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import {
@@ -22,8 +23,8 @@ import moment from "moment";
 import PlacesInput from "../../../app/common/form/PlacesInput";
 import { appConfig } from "../../../app/config/config";
 
-const mapState = (state, ownProps) => {
-  const eventId = ownProps.match.params.id;
+const mapState = (state/* , ownProps */) => {
+  //const eventId = ownProps.match.params.id;
 
   //WITH REDUX FORM YOU WON'T BE NEEDING TO CREATE FIELDS MANUALLY THIS ALREADY DONE AUTOMATICALLY
   /*  let event = {
@@ -37,8 +38,12 @@ const mapState = (state, ownProps) => {
   //WE JUST SET THE EVENT TO AN EMPTY OBJECT
   let event = {};
 
-  if (eventId && state.events.length > 0) {
+ /*  if (eventId && state.events.length > 0) {
     event = state.events.filter(event => event.id === eventId)[0];
+  } */
+
+  if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
+    event = state.firestore.ordered.events[0];
   }
 
   //WE WOULD NO LONGER BE NEEDING TO RETURN THE EVENT OBJECT
@@ -119,6 +124,12 @@ class EventForm extends Component {
         this.props.change('venue',selectedVenue)
       }); //adding this last then is used to handle onMouseSelect because when you type and click on an option it does not work this helps to correct that because assigning this function to the onselect overrode the default
   };
+
+
+   async componentDidMount(){
+   const {firestore, match}  = this.props;
+   await firestore.get(`/events${match.params.id}`);
+  }
 
 
   /*  state = {
@@ -271,13 +282,13 @@ class EventForm extends Component {
   }
 }
 
-export default connect(
+export default withFirestore(connect(
   mapState,
   actions
 )(
   reduxForm({ form: "eventForm", enableReinitialize: true, validate })(
     EventForm
   )
-);
+));
 
 //here enabling reinitialize to true is used when the form will be used as an edit form or needs to have an initial value set, this makes the value available immediately after the page is refreshed

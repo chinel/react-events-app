@@ -18,6 +18,7 @@ const eventImageTextStyle = {
 };
 
 const EventDetailedHeader = ({event}) => {
+   
     return (
            <Segment.Group>
               <Segment basic attached="top" style={{ padding: '0' }}>
