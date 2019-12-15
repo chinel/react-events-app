@@ -128,7 +128,16 @@ class EventForm extends Component {
 
    async componentDidMount(){
    const {firestore, match}  = this.props;
-   await firestore.get(`/events${match.params.id}`);
+   let event = await firestore.get(`events/${match.params.id}`);
+   //because we where storing our venueLatLng in our local state and when you
+   //try updating an event and since you are not changing the location which triggers
+   //and sets the venueLatLng and since the local state is empty
+   //it sets the venueLatLng to what is in the state which is empty according to the onFormSubmit method
+   if(event.exists){
+     this.setState({
+       venueLatLng: event.data().venueLatLng
+     })
+   }
   }
 
 
@@ -158,7 +167,7 @@ class EventForm extends Component {
   onFormSubmit = values => {
     //this is no longer needed with redux forms evt.preventDefault();
     /*  if (this.state.event.id) {  instead of using check in the state we will be checking the event data in initializeValues of redux forms*/
-    values.date = moment(values.date).format();
+    //values.date = moment(values.date).format();
     values.venueLatLng = this.state.venueLatLng;
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);

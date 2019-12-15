@@ -12,6 +12,7 @@ import {
 } from "../async/asyncActions";
 import { fetchSampleData } from "../../app/data/mockApi";
 import { createNewEvent } from "../../app/common/util/helpers";
+import moment from "moment";
 
 
 export const fetchEvents = events => {
@@ -53,14 +54,22 @@ export const createEvent = event => {
 };
 
 export const updateEvent = event => {
-  return async dispatch => {
-    try {
-      dispatch({
+ /*  return async dispatch => { */
+  return async (dispatch, getState, {getFirestore}) => { //changed this to be able to update events in firestore
+    const firestore = getFirestore();
+    //this is to ensure that the field was changed before it changes the date else it will reset a field that is not a date object to 1970
+    if(event.date !== getState().firestore.ordered.events[0].date){
+      event.date = moment(event.date).toDate();
+    }
+    try { 
+      
+      /* dispatch({
         type: UPDATE_EVENT,
         payload: {
           event
         }
-      });
+      }); */
+      await firestore.update(`events/${event.id}`, event);
       toastr.success("Success!", "Event has been updated"); // the first parameter passed is the title while the second is the body
     } catch (error) {
       toastr.error("Oops!", "Something went wrong");
