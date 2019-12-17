@@ -21,7 +21,8 @@ const mapState = (state,/*  ownProps */) => { //Here ownProps is the props alrea
    }
 
    return{
-       event
+       event,
+       auth: state.firebase.auth
    }
 
 }
@@ -42,12 +43,13 @@ class EventDetailedPage extends Component {
 
 
   render() {
-    const {event} = this.props;
+    const {event, auth} = this.props;
     const attendees = event && event.attendees && objectToArray(event.attendees);//this check to see if there are events and if there are also attendees under the events then it uses the objectToArray helper method to convert it to an array
-    return (
+    const isHost = event.hostUid === auth.uid;
+    const isGoing = attendees && attendees.some(a => a.id === auth.uid); //this check to see if attendees is present and if attendees has an id matching auth id it returns true or false    return (
       <Grid>
       <Grid.Column width={10}>
-        <EventDetailedHeader  event={event}/>
+        <EventDetailedHeader  event={event} isHost={isHost} isGoing={isGoing}/>
         <EventDetailedInfo event={event} />
         <EventDetailedChat />
       </Grid.Column>

@@ -14,7 +14,6 @@ import { fetchSampleData } from "../../app/data/mockApi";
 import { createNewEvent } from "../../app/common/util/helpers";
 import moment from "moment";
 
-
 export const fetchEvents = events => {
   return {
     type: FETCH_EVENTS,
@@ -23,7 +22,7 @@ export const fetchEvents = events => {
 };
 
 export const createEvent = event => {
-  return async (dispatch, getState, {getFirestore}) => {
+  return async (dispatch, getState, { getFirestore }) => {
     const firestore = getFirestore();
     //We can as well get the authenticated user information from firestore as well
     const user = firestore.auth().currentUser;
@@ -31,13 +30,13 @@ export const createEvent = event => {
     const photoURL = getState().firebase.profile.photoURL;
     let newEvent = createNewEvent(user, photoURL, event);
     try {
-      let createdEvent = await firestore.add(`events`, newEvent);//firestore add creates a unique id for us
+      let createdEvent = await firestore.add(`events`, newEvent); //firestore add creates a unique id for us
       //We will also be creating a lookup kind of table to store the event and user information to help us in the future if we need query user attending events
-      await firestore.set(`event_attendee/${createdEvent.id}_${user.id}`,{
+      await firestore.set(`event_attendee/${createdEvent.id}_${user.id}`, {
         eventId: createdEvent.id,
         userUid: user.uid,
-        eventDate:event.date,
-        host:true
+        eventDate: event.date,
+        host: true
       });
       //We will comment this out as we will no longer be storing the event data in our reducer
       /* dispatch({
@@ -54,15 +53,15 @@ export const createEvent = event => {
 };
 
 export const updateEvent = event => {
- /*  return async dispatch => { */
-  return async (dispatch, getState, {getFirestore}) => { //changed this to be able to update events in firestore
+  /*  return async dispatch => { */
+  return async (dispatch, getState, { getFirestore }) => {
+    //changed this to be able to update events in firestore
     const firestore = getFirestore();
     //this is to ensure that the field was changed before it changes the date else it will reset a field that is not a date object to 1970
-    if(event.date !== getState().firestore.ordered.events[0].date){
+    if (event.date !== getState().firestore.ordered.events[0].date) {
       event.date = moment(event.date).toDate();
     }
-    try { 
-      
+    try {
       /* dispatch({
         type: UPDATE_EVENT,
         payload: {
@@ -73,6 +72,26 @@ export const updateEvent = event => {
       toastr.success("Success!", "Event has been updated"); // the first parameter passed is the title while the second is the body
     } catch (error) {
       toastr.error("Oops!", "Something went wrong");
+    }
+  };
+};
+
+export const cancelToggle = (cancelled, eventId) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+    const message = cancelled
+      ? "Are you sure you want to cancel this event"
+      : "This will reactivate the event - are you sure?";
+    try {
+      toastr.confirm(message, {
+        onOk: () => 
+         firestore.update(`events/${eventId}`, {
+          cancelled: cancelled
+        })
+      });
+      
+    } catch (error) {
+      console.log(error);
     }
   };
 };

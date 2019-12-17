@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Segment, Item, Icon, List, Button } from "semantic-ui-react";
+import { Segment, Item, Icon, List, Button, Label } from "semantic-ui-react";
 import format from "date-fns/format";
 import EventListAttendee from "./EventListAttendee";
 import { Link } from "react-router-dom";
@@ -18,6 +18,8 @@ class EventListItem extends Component {
                 <Item.Description>
                   Hosted by <a>{event.hostedBy}</a>
                 </Item.Description>
+                {event.cancelled &&
+                <Label style={{top: '-40px'}} color="red" ribbon="right" content="This event has been cancelled"/>}
               </Item.Content>
             </Item>
           </Item.Group>

@@ -14,7 +14,7 @@ import {
 } from "revalidate";
 import cuid from "cuid";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
-import { createEvent, updateEvent } from "../eventActions";
+import { createEvent, updateEvent, cancelToggle } from "../eventActions";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
@@ -53,13 +53,15 @@ const mapState = (state/* , ownProps */) => {
 
   //WITH REDUX FORM YOU CAN SET THE INITIAL VALUES AS SHOWN BELOW
   return {
-    initialValues: event
+    initialValues: event,
+    event //this is the same as saying event:event
   };
 };
 
 const actions = {
   createEvent,
-  updateEvent
+  updateEvent,
+  cancelToggle
 };
 
 const category = [
@@ -128,17 +130,22 @@ class EventForm extends Component {
 
    async componentDidMount(){
    const {firestore, match}  = this.props;
-   let event = await firestore.get(`events/${match.params.id}`);
+    await firestore.setListener(`events/${match.params.id}`);
    //because we where storing our venueLatLng in our local state and when you
    //try updating an event and since you are not changing the location which triggers
    //and sets the venueLatLng and since the local state is empty
    //it sets the venueLatLng to what is in the state which is empty according to the onFormSubmit method
-   if(event.exists){
+   /* This will be moved to the onFormSubmit method if(event.exists){
      this.setState({
        venueLatLng: event.data().venueLatLng
      })
-   }
+   } */
   }
+
+     async componentWillUnmount(){
+   const {firestore, match}  = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
+     }
 
 
   /*  state = {
@@ -170,6 +177,9 @@ class EventForm extends Component {
     //values.date = moment(values.date).format();
     values.venueLatLng = this.state.venueLatLng;
     if (this.props.initialValues.id) {
+      if(Object.keys(values.venueLatLng).length === 0){
+        values.venueLatLng = this.props.event.venueLatLng;
+      }
       this.props.updateEvent(values);
       this.props.history.goBack();
     } else {
@@ -188,7 +198,7 @@ class EventForm extends Component {
   }; */
   render() {
     /*     const { event } = this.state; */
-    const { invalid, pristine, submitting } = this.props;
+    const { invalid, pristine, submitting, event, cancelToggle } = this.props;
     return (
       <Grid>
         <Script
@@ -283,6 +293,13 @@ class EventForm extends Component {
               <Button onClick={this.props.history.goBack} type="button">
                 Cancel
               </Button>
+              <Button
+              onClick={() => cancelToggle(!event.cancelled, event.id)} /*The ! not operator will return the opposite of whatever event.cancelled is */
+              type="button"
+              color={event.cancelled ? 'green': 'red'}
+              floated="right"
+              content={event.cancelled ? 'Reactivate Event' : 'Cancel Event'}
+              />
             </Form>
           </Segment>
         </Grid.Column>
