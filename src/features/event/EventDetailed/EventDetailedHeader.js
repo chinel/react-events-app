@@ -16,7 +16,7 @@ const eventImageTextStyle = {
   color: "white"
 };
 
-const EventDetailedHeader = ({ event, isHost, isGoing }) => {
+const EventDetailedHeader = ({ event, isHost, isGoing, goingToEvent }) => {
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
@@ -45,7 +45,7 @@ const EventDetailedHeader = ({ event, isHost, isGoing }) => {
         </Segment>
       </Segment>
 
-      <Segment attached="bottom">
+      <Segment attached="bottom" style={{overflow: 'hidden'}}>
         {!isHost && (
           <div>
             {isGoing ? (

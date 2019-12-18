@@ -31,7 +31,7 @@ const EventDetailedSidebar = ({ attendees }) => {
                   }
                 <Item.Image size="tiny" src={attendee.photoURL} />
                 <Item.Content verticalAlign="middle">
-                  <Item.Header as="h3"><a>{attendee.name}</a></Item.Header>
+                  <Item.Header as="h3"><a>{attendee.displayName}</a></Item.Header>
                 </Item.Content>
               </Item>
             ))}

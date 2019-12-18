@@ -8,6 +8,7 @@ import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { toastr } from 'react-redux-toastr';
 import { objectToArray } from '../../../app/common/util/helpers';
+import {  goingToEvent } from '../../user/userActions';
 
 
 const mapState = (state,/*  ownProps */) => { //Here ownProps is the props already available to the component such as the history, match, location object if routing is applied and so on and so forth
@@ -27,6 +28,10 @@ const mapState = (state,/*  ownProps */) => { //Here ownProps is the props alrea
 
 }
 
+const actions = {
+  goingToEvent
+}
+
 
 class EventDetailedPage extends Component {
 
@@ -43,13 +48,14 @@ class EventDetailedPage extends Component {
 
 
   render() {
-    const {event, auth} = this.props;
+    const {event, auth, goingToEvent} = this.props;
     const attendees = event && event.attendees && objectToArray(event.attendees);//this check to see if there are events and if there are also attendees under the events then it uses the objectToArray helper method to convert it to an array
     const isHost = event.hostUid === auth.uid;
     const isGoing = attendees && attendees.some(a => a.id === auth.uid); //this check to see if attendees is present and if attendees has an id matching auth id it returns true or false    return (
-      <Grid>
+     return(
+     <Grid>
       <Grid.Column width={10}>
-        <EventDetailedHeader  event={event} isHost={isHost} isGoing={isGoing}/>
+        <EventDetailedHeader  event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent}/>
         <EventDetailedInfo event={event} />
         <EventDetailedChat />
       </Grid.Column>
@@ -64,4 +70,4 @@ class EventDetailedPage extends Component {
 
 
 //the withFirestore Higher order component provides us with firebase and firestore methods that we can use to do a whole lot
-export default withFirestore(connect(mapState)(EventDetailedPage));
+export default withFirestore(connect(mapState, actions)(EventDetailedPage));
