@@ -36,14 +36,19 @@ const actions = {
 class EventDetailedPage extends Component {
 
  async componentDidMount(){
-   const {firestore, match, history} = this.props;
-   let event = await firestore.get(`events/${match.params.id}`);
-   console.log(event);
+   const {firestore, match /* history */} = this.props;
+    await firestore.setListener(`events/${match.params.id}`);
+  /*  console.log(event);
    if(!event.exists){
     history.push('/events');
     toastr.error("Sorry", "Event Not Found");
-   }
+   } */
 
+  }
+
+   async componentWillMount (){
+    const {firestore, match /* history */} = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
   }
 
 
