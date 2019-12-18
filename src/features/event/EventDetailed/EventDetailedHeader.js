@@ -51,7 +51,7 @@ const EventDetailedHeader = ({ event, isHost, isGoing, goingToEvent }) => {
             {isGoing ? (
               <Button>Cancel My Place</Button>
             ) : (
-              <Button color="teal">JOIN THIS EVENT</Button>
+              <Button onClick={() => goingToEvent(event)} color="teal">JOIN THIS EVENT</Button>
             )}
           </div>
         )}
