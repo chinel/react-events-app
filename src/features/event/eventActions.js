@@ -32,7 +32,7 @@ export const createEvent = event => {
     try {
       let createdEvent = await firestore.add(`events`, newEvent); //firestore add creates a unique id for us
       //We will also be creating a lookup kind of table to store the event and user information to help us in the future if we need query user attending events
-      await firestore.set(`event_attendee/${createdEvent.id}_${user.id}`, {
+      await firestore.set(`event_attendee/${createdEvent.id}_${user.uid}`, {
         eventId: createdEvent.id,
         userUid: user.uid,
         eventDate: event.date,

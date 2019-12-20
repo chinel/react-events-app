@@ -8,7 +8,7 @@ import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { toastr } from 'react-redux-toastr';
 import { objectToArray } from '../../../app/common/util/helpers';
-import {  goingToEvent } from '../../user/userActions';
+import {  goingToEvent, cancelGoingToEvent } from '../../user/userActions';
 
 
 const mapState = (state,/*  ownProps */) => { //Here ownProps is the props already available to the component such as the history, match, location object if routing is applied and so on and so forth
@@ -29,7 +29,8 @@ const mapState = (state,/*  ownProps */) => { //Here ownProps is the props alrea
 }
 
 const actions = {
-  goingToEvent
+  goingToEvent,
+  cancelGoingToEvent
 }
 
 
@@ -53,14 +54,14 @@ class EventDetailedPage extends Component {
 
 
   render() {
-    const {event, auth, goingToEvent} = this.props;
+    const {event, auth, goingToEvent, cancelGoingToEvent} = this.props;
     const attendees = event && event.attendees && objectToArray(event.attendees);//this check to see if there are events and if there are also attendees under the events then it uses the objectToArray helper method to convert it to an array
     const isHost = event.hostUid === auth.uid;
     const isGoing = attendees && attendees.some(a => a.id === auth.uid); //this check to see if attendees is present and if attendees has an id matching auth id it returns true or false    return (
      return(
      <Grid>
       <Grid.Column width={10}>
-        <EventDetailedHeader  event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent}/>
+        <EventDetailedHeader  event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} cancelGoingToEvent={cancelGoingToEvent}/>
         <EventDetailedInfo event={event} />
         <EventDetailedChat />
       </Grid.Column>
