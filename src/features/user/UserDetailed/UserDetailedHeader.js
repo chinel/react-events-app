@@ -4,6 +4,7 @@ import differenceInYears from 'date-fns/difference_in_years';
 
 const UserDetailedHeader = ({profile}) => {
    
+    console.log(profile.dateOfBirth)
     let age;
     if(profile.dateOfBirth){
     age =  differenceInYears(Date.now(), profile.dateOfBirth);

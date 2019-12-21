@@ -39,12 +39,13 @@ class UserDetailedPage extends Component {
 
 
     render() {
-     const {profile, photos} = this.props;
+     const {profile, photos, auth, match} = this.props;
+     const isCurrentUser = auth.uid === match.params.id;
         return (
             <Grid>
                  <UserDetailedHeader profile={profile}/>
                 <UserDetailedDescription profile={profile}/>
-                <UserDetailedSidebar/>
+                <UserDetailedSidebar isCurrentUser={isCurrentUser}/>
                 {photos && photos.length > 0 &&
                <UserDetailedPhotos photos={photos}/>
                 }
