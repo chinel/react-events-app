@@ -3,22 +3,28 @@ import { Grid } from "semantic-ui-react";
 import { firestoreConnect, isLoaded, isEmpty} from 'react-redux-firebase';
 import EventList from "../EventList/EventList";
 import { connect } from "react-redux";
-import {deleteEvent } from "../eventActions";
+import {/* deleteEvent, */ getEventsForDashboard } from "../eventActions";
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import EventActivity from "../EventActivity/EventActivity";
 
 const mapState = state => ({
-  events: state.firestore.ordered.events,
-  /* loading: state.async.loading, */
+  events: state.events,
+  loading: state.async.loading
+/*   events: state.firestore.ordered.events,
+ */  /* loading: state.async.loading, */
 });
 
 const actions = {
  /*  createEvent,
   updateEvent, */
-  deleteEvent
+ /*  deleteEvent, */
+  getEventsForDashboard
 };
 
 class EventDashboard extends Component {
+  componentDidMount(){
+    this.props.getEventsForDashboard();
+  }
  /*  state = {
     //events: eventsFromDashboard,
     isOpen: false,
@@ -83,8 +89,9 @@ class EventDashboard extends Component {
 
   render() {
     const  {events, loading} = this.props;
+    if (loading) return <LoadingComponent inverted={true}/> 
     //console.log(loading);
-    if (!isLoaded(events) || isEmpty(events)) return <LoadingComponent inverted={true}/> /*Setting the inverted property to true changes the default dark overlay to a white one*/
+    /* if (!isLoaded(events) || isEmpty(events)) return <LoadingComponent inverted={true}/> */ /*Setting the inverted property to true changes the default dark overlay to a white one*/
     return (
       <Grid>
         <Grid.Column width={10}>
