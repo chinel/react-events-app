@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid , Button} from "semantic-ui-react";
+import { Grid , Loader} from "semantic-ui-react";
 import { firestoreConnect, isLoaded, isEmpty} from 'react-redux-firebase';
 import EventList from "../EventList/EventList";
 import { connect } from "react-redux";
@@ -127,19 +127,25 @@ class EventDashboard extends Component {
   render() {
     const  {events, loading} = this.props;
     if (this.state.loadingInitial) return <LoadingComponent inverted={true}/> 
+    const {moreEvents, loadedEvents} = this.state;
     //console.log(loading);
     /* if (!isLoaded(events) || isEmpty(events)) return <LoadingComponent inverted={true}/> */ /*Setting the inverted property to true changes the default dark overlay to a white one*/
     return (
       <Grid>
         <Grid.Column width={10}>
           <EventList
+            loading={loading}
+            moreEvents={moreEvents}
             deleteEvent={this.handleDeleteEvent}
-            events={/* this.state. */this.state.loadedEvents}
+            events={loadedEvents}
+            getNextEvent={this.getNextEvent}
           />
-          <Button loading={loading} onClick={this.getNextEvent} disabled={!this.state.moreEvents} content="More" color="green" floated="right" />
         </Grid.Column>
         <Grid.Column width={6}>
          <EventActivity/>
+        </Grid.Column>
+        <Grid.Column width={10}>
+          <Loader active={loading}/>
         </Grid.Column>
       </Grid>
     );
