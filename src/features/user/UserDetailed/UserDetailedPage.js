@@ -52,6 +52,10 @@ async componentDidMount(){
 }  
 
 
+changeTab = (e, data) => {
+ this.props.getUserEvents(this.props.userUid, data.activeIndex);
+}
+
 
 
     render() {
@@ -68,7 +72,7 @@ async componentDidMount(){
                 {photos && photos.length > 0 &&
                <UserDetailedPhotos photos={photos}/>
                 }
-               <UserDetailedEvents eventsLoading={eventsLoading} events={events}/>
+               <UserDetailedEvents eventsLoading={eventsLoading} events={events} changeTab={this.changeTab}/>
             </Grid>
 
         );

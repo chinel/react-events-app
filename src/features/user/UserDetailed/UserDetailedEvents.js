@@ -1,20 +1,22 @@
 import React from "react";
-import { Grid, Segment, Menu, Card, Image, Header } from "semantic-ui-react";
+import { Grid, Segment, Menu, Card, Image, Header, Tab } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import format from "date-fns/format";
 
-const UserDetailedEvents = ({ events, eventsLoading }) => {
+const panes = [
+  {menuItem: "All Events", pane: {key: 'allEvents'}},
+  {menuItem: "Past Events", pane: {key: 'pastEvents'}},
+  {menuItem: "Future Events", pane: {key: 'futureEvents'}},
+  {menuItem: "Hosting", pane: {key: 'hosted'}}
+]
+
+const UserDetailedEvents = ({ events, eventsLoading, changeTab }) => {
   return (
     <Grid.Column width={12}>
       <Segment attached loading={eventsLoading}>
         <Header icon="calendar" content="Events" />
-        <Menu secondary pointing>
-          <Menu.Item name="All Events" active />
-          <Menu.Item name="Past Events" />
-          <Menu.Item name="Future Events" />
-          <Menu.Item name="Events Hosted" />
-        </Menu>
-
+        <Tab onTabChange={(e,data)=> changeTab(e, data)} panes={panes} menu={{secondary: true, pointing: true}}/>
+         <br/>
         <Card.Group itemsPerRow={5}>
           
           {events &&
