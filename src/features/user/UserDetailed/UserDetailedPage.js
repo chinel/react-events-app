@@ -33,6 +33,8 @@ return {
   auth: state.firebase.auth,
   profile, //this is the same as profile: profile
   userUid,
+  events: state.events,
+  eventsLoading:state.async.loading,
   photos: state.firestore.ordered.photos,
   requesting: state.firestore.status.requesting
 }};
@@ -53,7 +55,7 @@ async componentDidMount(){
 
 
     render() {
-     const {profile, photos, auth, match, requesting} = this.props;
+     const {profile, photos, auth, match, requesting, events, eventsLoading} = this.props;
      const isCurrentUser = auth.uid === match.params.id;
      const loading = Object.values(requesting).some(a => a === true);//this gets the values of an object and checks if there is any value of that object that is === true
      
@@ -66,7 +68,7 @@ async componentDidMount(){
                 {photos && photos.length > 0 &&
                <UserDetailedPhotos photos={photos}/>
                 }
-               <UserDetailedEvents/>
+               <UserDetailedEvents eventsLoading={eventsLoading} events={events}/>
             </Grid>
 
         );
