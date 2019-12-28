@@ -10,6 +10,7 @@ import UserDetailedDescription from './UserDetailedDescription';
 import UserDetailedHeader from './UserDetailedHeader';
 import { userDetaileQuery } from '../userQueries';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { getUserEvents} from '../userActions';
 
 
 
@@ -36,8 +37,19 @@ return {
   requesting: state.firestore.status.requesting
 }};
 
+const actions = {
+  getUserEvents
+}
+
 
 class UserDetailedPage extends Component {
+
+async componentDidMount(){
+  let events = await this.props.getUserEvents(this.props.userUid);
+  console.log(events)
+}  
+
+
 
 
     render() {
@@ -61,4 +73,4 @@ class UserDetailedPage extends Component {
     }
 }
 
-export default compose(connect(mapState), firestoreConnect((auth, userUid )=> userDetaileQuery(auth, userUid)))(UserDetailedPage);
+export default compose(connect(mapState, actions), firestoreConnect((auth, userUid )=> userDetaileQuery(auth, userUid)))(UserDetailedPage);
