@@ -13,8 +13,7 @@ import {
 import { fetchSampleData } from "../../app/data/mockApi";
 import { createNewEvent } from "../../app/common/util/helpers";
 import moment from "moment";
-import firebase from '../../app/config/firebase';
-
+import firebase from "../../app/config/firebase";
 
 /* export const fetchEvents = events => {
   return {
@@ -86,12 +85,11 @@ export const cancelToggle = (cancelled, eventId) => {
       : "This will reactivate the event - are you sure?";
     try {
       toastr.confirm(message, {
-        onOk: () => 
-         firestore.update(`events/${eventId}`, {
-          cancelled: cancelled
-        })
+        onOk: () =>
+          firestore.update(`events/${eventId}`, {
+            cancelled: cancelled
+          })
       });
-      
     } catch (error) {
       console.log(error);
     }
@@ -121,27 +119,54 @@ export const cancelToggle = (cancelled, eventId) => {
   };
 }; */
 
-export const getEventsForDashboard = () =>
- async (dispatch, getState) => {
-   let today = new Date(Date.now());
-   const firestore = firebase.firestore();
-   const eventQuery = firestore.collection('events').where('date','>', today);
-   console.log(eventQuery);
-   try {
-     dispatch(asyncActionStart())
-     let querySnap = await eventQuery.get();
-     let events = [];
+export const getEventsForDashboard = lastEvent => async (
+  dispatch,
+  getState
+) => {
+  let today = new Date(Date.now());
+  const firestore = firebase.firestore();
+  const eventRefs = firestore.collection("events");
 
-     for(let i = 0; i< querySnap.docs.length; i++){
-       let evt = {...querySnap.docs[i].data(), id: querySnap.docs[i].id} //this spreads out query snap data and adds the id of the querySnap as a field as an id field to the data
-       events.push(evt);
-      }
-     dispatch({type: FETCH_EVENTS, payload: {events}})
-     dispatch(asyncActionFinish())
+  try {
+    dispatch(asyncActionStart());
+    let startAfter =
+      lastEvent &&
+      (await firestore
+        .collection("events")
+        .doc(lastEvent.id)
+        .get());
+    let query;
 
-   } catch (error) {
-     console.log(error)
-     dispatch(asyncActionError())
-   }
+    lastEvent
+      ? (query = eventRefs
+         /*  .where("date", ">=", today) */
+          .orderBy("date")
+          .startAfter(startAfter)
+          .limit(2))
+      : (query = eventRefs
+          /* .where("date", ">=", today) */
+          .orderBy("date")
+          .limit(2));
 
- }
+    let querySnap = await query.get();
+
+    if (querySnap.docs.length === 0) {
+      dispatch(asyncActionFinish());
+      return;
+    }
+
+    let events = [];
+
+    for (let i = 0; i < querySnap.docs.length; i++) {
+      let evt = { ...querySnap.docs[i].data(), id: querySnap.docs[i].id }; //this spreads out query snap data and adds the id of the querySnap as a field as an id field to the data
+      events.push(evt);
+    }
+    dispatch({ type: FETCH_EVENTS, payload: { events } });
+    dispatch(asyncActionFinish());
+    return querySnap;
+  } catch (error) {
+    /*  */
+    console.log(error);
+    dispatch(asyncActionError());
+  }
+};

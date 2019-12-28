@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid } from "semantic-ui-react";
+import { Grid , Button} from "semantic-ui-react";
 import { firestoreConnect, isLoaded, isEmpty} from 'react-redux-firebase';
 import EventList from "../EventList/EventList";
 import { connect } from "react-redux";
@@ -22,8 +22,45 @@ const actions = {
 };
 
 class EventDashboard extends Component {
-  componentDidMount(){
-    this.props.getEventsForDashboard();
+
+  state = {
+    moreEvents:false,
+    loadingInitial: true,
+    loadedEvents: []
+  }
+
+  async componentDidMount(){
+   let next = await this.props.getEventsForDashboard();
+   console.log(next);
+
+   if(next && next.docs && next.docs.length > 1){
+     this.setState({
+       moreEvents: true,
+       loadingInitial: false
+     })
+   }
+  }
+
+  componentWillReceiveProps(nextProps){
+  if(this.props.events !== nextProps.events){
+    this.setState({
+      loadedEvents: [...this.state.loadedEvents, ...nextProps.events]
+    })
+  }
+  }
+
+  getNextEvent = async() => {
+    const {events} = this.props;
+    let lastEvent =  events && events[events.length-1];
+    console.log(lastEvent);
+    let next = await this.props.getEventsForDashboard(lastEvent);
+    console.log(next);
+    console.log(next && next.docs && next.docs.length <= 1);
+    if(!next){
+      this.setState({
+        moreEvents: false
+      })
+    }
   }
  /*  state = {
     //events: eventsFromDashboard,
@@ -89,7 +126,7 @@ class EventDashboard extends Component {
 
   render() {
     const  {events, loading} = this.props;
-    if (loading) return <LoadingComponent inverted={true}/> 
+    if (this.state.loadingInitial) return <LoadingComponent inverted={true}/> 
     //console.log(loading);
     /* if (!isLoaded(events) || isEmpty(events)) return <LoadingComponent inverted={true}/> */ /*Setting the inverted property to true changes the default dark overlay to a white one*/
     return (
@@ -97,8 +134,9 @@ class EventDashboard extends Component {
         <Grid.Column width={10}>
           <EventList
             deleteEvent={this.handleDeleteEvent}
-            events={/* this.state. */events}
+            events={/* this.state. */this.state.loadedEvents}
           />
+          <Button loading={loading} onClick={this.getNextEvent} disabled={!this.state.moreEvents} content="More" color="green" floated="right" />
         </Grid.Column>
         <Grid.Column width={6}>
          <EventActivity/>
