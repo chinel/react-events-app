@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {  connect} from 'react-redux';
-import { withFirestore } from 'react-redux-firebase';
+import { withFirestore, firebaseConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 import { Grid } from "semantic-ui-react";
 import EventDetailedHeader from "./EventDetailedHeader";
 import EventDetailedInfo from "./EventDetailedInfo";
@@ -9,6 +10,7 @@ import EventDetailedSidebar from "./EventDetailedSidebar";
 import { toastr } from 'react-redux-toastr';
 import { objectToArray } from '../../../app/common/util/helpers';
 import {  goingToEvent, cancelGoingToEvent } from '../../user/userActions';
+import { addEventComment } from '../eventActions';
 
 
 const mapState = (state,/*  ownProps */) => { //Here ownProps is the props already available to the component such as the history, match, location object if routing is applied and so on and so forth
@@ -30,14 +32,15 @@ const mapState = (state,/*  ownProps */) => { //Here ownProps is the props alrea
 
 const actions = {
   goingToEvent,
-  cancelGoingToEvent
+  cancelGoingToEvent,
+  addEventComment
 }
 
 
 class EventDetailedPage extends Component {
 
  async componentDidMount(){
-   const {firestore, match /* history */} = this.props;
+   const {firestore, match /* history */, addEventComment} = this.props;
     await firestore.setListener(`events/${match.params.id}`);
   /*  console.log(event);
    if(!event.exists){
@@ -63,7 +66,7 @@ class EventDetailedPage extends Component {
       <Grid.Column width={10}>
         <EventDetailedHeader  event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} cancelGoingToEvent={cancelGoingToEvent}/>
         <EventDetailedInfo event={event} />
-        <EventDetailedChat />
+        <EventDetailedChat addEventComment={addEventComment} eventId={event.id} />
       </Grid.Column>
       <Grid.Column width={6}>
         <EventDetailedSidebar attendees={attendees}/>
@@ -76,4 +79,7 @@ class EventDetailedPage extends Component {
 
 
 //the withFirestore Higher order component provides us with firebase and firestore methods that we can use to do a whole lot
-export default withFirestore(connect(mapState, actions)(EventDetailedPage));
+export default compose(withFirestore,
+  connect(mapState, actions),
+  firebaseConnect((props) => ([`event_chat/${props.match.params.id}`]))
+)(EventDetailedPage);
