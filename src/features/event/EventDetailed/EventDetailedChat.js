@@ -1,12 +1,16 @@
-import React from "react";
+import React, { Component } from 'react'
 import { Segment, Header, Comment } from "semantic-ui-react";
 import EventDetailedChatForm from "./EventDetailedChatForm";
 import { Link } from "react-router-dom";
 import distanceInWords from "date-fns/distance_in_words";
 
-const EventDetailedChat = ({ addEventComment, eventId, eventChat }) => {
-  return (
-    <div>
+
+
+class EventDetailedChat extends Component {
+  render() {
+    const { addEventComment, eventId, eventChat } = this.props;
+    return (
+      <div>
       <Segment
         textAlign="center"
         attached="top"
@@ -44,7 +48,9 @@ const EventDetailedChat = ({ addEventComment, eventId, eventChat }) => {
         />
       </Segment>
     </div>
-  );
-};
+  
+    )
+  }
+}
 
 export default EventDetailedChat;
