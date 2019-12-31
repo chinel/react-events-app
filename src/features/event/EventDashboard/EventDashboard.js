@@ -7,11 +7,19 @@ import {/* deleteEvent, */ getEventsForDashboard } from "../eventActions";
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import EventActivity from "../EventActivity/EventActivity";
 
+const query = [{
+  collection: 'activity',
+  orderBy: ["timestamp","desc"],
+  limit: 5
+}]
+
+
 const mapState = state => ({
   events: state.events,
   loading: state.async.loading
 /*   events: state.firestore.ordered.events,
- */  /* loading: state.async.loading, */
+ */  /* loading: state.async.loading, */,
+ activities: state.firestore.ordered.activity
 });
 
 const actions = {
@@ -124,7 +132,7 @@ class EventDashboard extends Component {
   };
 
   render() {
-    const  {events, loading} = this.props;
+    const  {events, loading, activities} = this.props;
     if (this.state.loadingInitial) return <LoadingComponent inverted={true}/> 
     const {moreEvents, loadedEvents} = this.state;
     //console.log(loading);
@@ -141,7 +149,7 @@ class EventDashboard extends Component {
           />
         </Grid.Column>
         <Grid.Column width={6}>
-         <EventActivity/>
+         <EventActivity activities={activities}/>
         </Grid.Column>
         <Grid.Column width={10}>
           <Loader active={loading}/>
@@ -154,5 +162,5 @@ class EventDashboard extends Component {
 export default connect(
   mapState,
   actions
-)(firestoreConnect([{collection: 'events'}])(EventDashboard));
+)(firestoreConnect(query)(EventDashboard));
 //The firestore connect higher order component here acts more of like a listener here for our events collections
