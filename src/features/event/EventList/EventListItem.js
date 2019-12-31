@@ -41,7 +41,7 @@ class EventListItem extends Component {
           </List>
         </Segment>
         <Segment clearing>
-          <span>{event.description.substr(0, 20)}...</span>
+          <span>{event.description.substr(0, 100)}...</span>
           {/* <Button
             as="a"
             color="red"
