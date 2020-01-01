@@ -118,17 +118,52 @@ export const deletePhoto = photo => async (
 };
 
 //here we didn't add the bracket around the photo parameter because it is really not necessary if it is just one parameter
-export const setMainPhoto = photo => async (
-  dispatch,
-  getState,
-  { getFirebase }
-) => {
-  const firebase = getFirebase();
+export const setMainPhoto = photo => async (dispatch,getState) => {
+  //BECAUSE THIS PROCESS WILL BE TAKING A LITTLE TIME WE WILL BE ADDING THE LOADING FLAG, using the dispatch async 
+  dispatch(asyncActionStart())
+  //const firebase = getFirebase(); we will be using batchWrites and so we will be needing to use firebase api directly
+  const firestore = firebase.firestore();
+  const user  = firebase.auth().currentUser;
+  const today = new Date(Date.now());
+  //Note you have to take into consideration the number of updates you want to perform at once as, updates has an impact on your quota and you have to be really sure it is neccessary before you can perform it
+ 
+  let userDocRef =  firestore.collection('users').doc(user.uid);
+  let eventAttendeeRef = firestore.collection('event_attendee');
   try {
-    return await firebase.updateProfile({
+    
+    let batch =  firestore.batch();
+
+    await batch.update(userDocRef,{
       photoURL: photo.url
-    });
+    })
+
+    let eventQuery = await eventAttendeeRef.where("userUid", '==',user.uid);
+    //.where('eventDate', '>', today);//this gets event_attendee date is greater than today to save quota
+
+    let eventQuerySnap = await eventQuery.get();
+    for (let i = 0; i < eventQuerySnap.docs.length; i++) {
+      let eventDocRef = await firestore
+      .collection('events')
+      .doc(eventQuerySnap.docs[i].data().eventId);
+      let event = await eventDocRef.get();
+      if (event.data().hostUid === user.uid) {
+        batch.update(eventDocRef,{
+          hostPhotoURL: photo.url,
+          [`attendees.${user.uid}.photoURL`]:photo.url
+        })
+      } else {
+        batch.update(eventDocRef,{
+          [`attendees.${user.uid}.photoURL`]:photo.url
+        })
+      }
+      
+    }
+    console.log(batch);
+    await batch.commit();
+    dispatch(asyncActionFinish());
   } catch (error) {
+    console.log(error);
+    dispatch(asyncActionError());
     throw new Error("Problem setting main photo");
   }
 };
