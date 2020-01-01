@@ -77,6 +77,40 @@ exports.cancelActivity = functions.firestore
       });
   });
 
+
+  exports.userFollowing = functions.firestore.document('users/{followerUid}/following/{followingUid}').
+  onCreate((event, context) => {
+    console.log("v1");
+    const followerUid = context.params.followerUid;
+    const followingUid = context.params.followingUid;
+
+    const followerDoc = admin
+    .firestore()
+    .collection('users')
+    .doc(followerUid);
+
+    console.log(followerDoc);
+
+    return followerDoc.get().then(doc => {
+     let userData = doc.data();
+     console.log({userData});
+     let follower = {
+       displayName: userData.displayName,
+       photoURL: userData.photoURL || '/assets/user.png',
+       city: userData.city || 'Unknown City'
+     };
+
+    return admin.firestore()
+    .collection('users')
+    .doc(followingUid)
+    .collection('followers')
+    .doc(followerUid)
+    .set(follower);
+    }).catch(err => {
+      return console.log("Error adding follower", err); 
+    });
+  })
+
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
