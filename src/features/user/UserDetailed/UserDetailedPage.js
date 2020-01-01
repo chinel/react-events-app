@@ -10,7 +10,7 @@ import UserDetailedDescription from './UserDetailedDescription';
 import UserDetailedHeader from './UserDetailedHeader';
 import { userDetaileQuery } from '../userQueries';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
-import { getUserEvents, followUser} from '../userActions';
+import { getUserEvents, followUser, unfollowUser} from '../userActions';
 
 
 
@@ -42,7 +42,8 @@ return {
 
 const actions = {
   getUserEvents,
-  followUser
+  followUser,
+  unfollowUser
 }
 
 
@@ -61,7 +62,7 @@ changeTab = (e, data) => {
 
 
     render() {
-     const {profile, photos, auth, match, requesting, events, eventsLoading, followUser, following} = this.props;
+     const {profile, photos, auth, match, requesting, events, eventsLoading, followUser, following, unfollowUser} = this.props;
      const isCurrentUser = auth.uid === match.params.id;
      const loading = Object.values(requesting).some(a => a === true);//this gets the values of an object and checks if there is any value of that object that is === true
      const isFollowing = !isEmpty(following);
@@ -70,7 +71,7 @@ changeTab = (e, data) => {
             <Grid>
                  <UserDetailedHeader profile={profile}/>
                 <UserDetailedDescription profile={profile}/>
-                <UserDetailedSidebar isFollowing={isFollowing} isCurrentUser={isCurrentUser} followUser={followUser} profile={profile}/>
+                <UserDetailedSidebar unfollowUser={unfollowUser} isFollowing={isFollowing} isCurrentUser={isCurrentUser} followUser={followUser} profile={profile}/>
                 {photos && photos.length > 0 &&
                <UserDetailedPhotos photos={photos}/>
                 }

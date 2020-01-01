@@ -111,6 +111,23 @@ exports.cancelActivity = functions.firestore
     });
   })
 
+
+ exports.unfollowUser = functions.firestore
+ .document("users/{followerUid}/following/{followingUid}")
+ .onDelete((event, context) => {
+   return admin.firestore()
+   .collection('users')
+   .doc(context.params.followingUid)
+   .collection('followers')
+   .doc(context.params.followerUid)
+   .delete()
+   .then(()=> {
+     return console.log('doc deleted');
+   }).catch(err =>{
+     return console.log(err);
+   })
+ }) 
+
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //

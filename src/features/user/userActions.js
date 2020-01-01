@@ -267,6 +267,22 @@ async(dispatch, getState, {getFirestore}) => {
   }
 }
 
+export const unfollowUser = (userToUnfollow) =>
+async(dispatch, getState,{getFirestore}) => {
+  const firestore = getFirestore();
+  const user = firestore.auth().currentUser;
+
+  try {
+   await firestore.delete({
+     collection: "users",
+     doc: user.uid,
+     subcollections: [{collection: "following", doc: userToUnfollow.id}]
+   })  
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 //Also note that the interest field that is saved to firestore user is saved as an array if you intend to make changes to specific fields in the array
 //this will be impossible for now it always updates the entire array and also if you decide to ffind out users
 //Who share the same interest this will be impossible as well in firestore as the field is stores as an array
