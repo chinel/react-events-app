@@ -36,7 +36,8 @@ return {
   events: state.events,
   eventsLoading:state.async.loading,
   photos: state.firestore.ordered.photos,
-  requesting: state.firestore.status.requesting
+  requesting: state.firestore.status.requesting,
+  following: state.firestore.ordered.following
 }};
 
 const actions = {
@@ -60,16 +61,16 @@ changeTab = (e, data) => {
 
 
     render() {
-     const {profile, photos, auth, match, requesting, events, eventsLoading, followUser} = this.props;
+     const {profile, photos, auth, match, requesting, events, eventsLoading, followUser, following} = this.props;
      const isCurrentUser = auth.uid === match.params.id;
      const loading = Object.values(requesting).some(a => a === true);//this gets the values of an object and checks if there is any value of that object that is === true
-     
+     const isFollowing = !isEmpty(following);
      if(loading) return <LoadingComponent inverted={true}/>
      return (
             <Grid>
                  <UserDetailedHeader profile={profile}/>
                 <UserDetailedDescription profile={profile}/>
-                <UserDetailedSidebar isCurrentUser={isCurrentUser} followUser={followUser} profile={profile}/>
+                <UserDetailedSidebar isFollowing={isFollowing} isCurrentUser={isCurrentUser} followUser={followUser} profile={profile}/>
                 {photos && photos.length > 0 &&
                <UserDetailedPhotos photos={photos}/>
                 }
@@ -80,4 +81,4 @@ changeTab = (e, data) => {
     }
 }
 
-export default compose(connect(mapState, actions), firestoreConnect((auth, userUid )=> userDetaileQuery(auth, userUid)))(UserDetailedPage);
+export default compose(connect(mapState, actions), firestoreConnect((auth, userUid, match )=> userDetaileQuery(auth, userUid, match)))(UserDetailedPage);
