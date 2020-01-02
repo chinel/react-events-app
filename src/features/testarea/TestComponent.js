@@ -6,7 +6,7 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from "react-places-autocomplete";
-import { incrementAsync, decrementAsync } from "../testarea/testActions";
+import { incrementAsync, decrementAsync, testPermission } from "../testarea/testActions";
 import GoogleMapReact from 'google-map-react';
 import {  openModal} from '../modals/modalActions';
 
@@ -19,7 +19,8 @@ const actions = {
   //this can be called any name here its called action and we need to let the component that will be using this action know abou the actions
   incrementAsync,
   decrementAsync,
-  openModal
+  openModal,
+  testPermission
 };
 
 const Marker = () => <Icon name="marker" size="big" color="red"/>
@@ -57,7 +58,7 @@ class TestComponent extends Component {
   onChange = (address) => this.setState({ address })
 
   render() {
-    const { incrementAsync, decrementAsync, data, openModal, loading} = this.props;
+    const { incrementAsync, decrementAsync, data, openModal, loading, testPermission} = this.props;
     const inputProps = {
         value: this.state.address,
         onChange: this.onChange,
@@ -73,6 +74,7 @@ class TestComponent extends Component {
         <Button loading={loading} onClick={incrementAsync} color="green" content="Increment" /> 
         <Button loading={loading} onClick={decrementAsync} color="red" content="Decrement" />
         <Button onClick={() => openModal('TestModal', {data: 43})} color="teal" content="Open Modal" />
+        <Button onClick={testPermission} color="teal" content="Test Permission" />
         <br/><br/>
         
         <form onSubmit={this.handleFormSubmit}>
