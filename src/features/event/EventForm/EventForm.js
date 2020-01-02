@@ -54,7 +54,8 @@ const mapState = (state/* , ownProps */) => {
   //WITH REDUX FORM YOU CAN SET THE INITIAL VALUES AS SHOWN BELOW
   return {
     initialValues: event,
-    event //this is the same as saying event:event
+    event, //this is the same as saying event:event,
+    loading: state.async.loading
   };
 };
 
@@ -171,7 +172,7 @@ class EventForm extends Component {
   } */
 
   /*   onFormSubmit = evt => { thi was used when redux form was not implemented */
-  onFormSubmit = values => {
+  onFormSubmit = async values => {
     //this is no longer needed with redux forms evt.preventDefault();
     /*  if (this.state.event.id) {  instead of using check in the state we will be checking the event data in initializeValues of redux forms*/
     //values.date = moment(values.date).format();
@@ -180,7 +181,7 @@ class EventForm extends Component {
       if(Object.keys(values.venueLatLng).length === 0){
         values.venueLatLng = this.props.event.venueLatLng;
       }
-      this.props.updateEvent(values);
+      await this.props.updateEvent(values); // using async await makes sure we do not get redirect as stated below until the update is complete
       this.props.history.goBack();
     } else {
       this.props.createEvent(values);
@@ -198,7 +199,7 @@ class EventForm extends Component {
   }; */
   render() {
     /*     const { event } = this.state; */
-    const { invalid, pristine, submitting, event, cancelToggle } = this.props;
+    const { invalid, pristine, submitting, event, cancelToggle, loading } = this.props;
     return (
       <Grid>
         <Script
@@ -284,13 +285,16 @@ class EventForm extends Component {
             />
           </Form.Field> */}
               <Button
+                loading={loading}
                 disabled={invalid || submitting || pristine}
                 positive
                 type="submit"
               >
                 Submit
               </Button>
-              <Button onClick={this.props.history.goBack} type="button">
+              <Button
+              disabled={loading}
+              onClick={this.props.history.goBack} type="button">
                 Cancel
               </Button>
               <Button

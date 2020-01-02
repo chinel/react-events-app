@@ -171,10 +171,17 @@ export const setMainPhoto = photo => async (dispatch,getState) => {
 export const goingToEvent = event => async (
   dispatch,
   getState,
-  { getFirestore }
+  /* { getFirestore } */
 ) => {
-  const firestore = getFirestore();
-  const user = firestore.auth().currentUser;
+  //here we will be using transactions to ensure data consistency
+  //So that if this same doc is being updated by another using user via  another action, this will retry the transaction
+  //to ensure that the data is consistent
+
+  /* const firestore = getFirestore(); */
+  //We will be using the asyncActionStart to get a loading flag to display to the user as transaction take more time than batch updates
+  dispatch(asyncActionStart());
+  const firestore = firebase.firestore();
+  const user = firebase.auth().currentUser;
   const photoURL = getState().firebase.profile.photoURL;
   const attendee = {
     going: true,
@@ -185,21 +192,28 @@ export const goingToEvent = event => async (
   };
 
   try {
-    //this updates the event with matching id and has attendee with a matching user uid
-    await firestore.update(`events/${event.id}`, {
-      [`attendees.${user.uid}`]: attendee
+    let eventDocRef = firestore.collection('events').doc(event.id);
+    let eventAttendeeEventDocRef = firestore.collection('event_attendee').doc(`${event.id}_${user.id}`);
+
+    await firestore.runTransaction(async (transaction)=>{
+      await transaction.get(eventDocRef);
+      await transaction.update(eventDocRef,{
+        [`attendees.${user.uid}`]: attendee
+      });
+      await transaction.set(eventAttendeeEventDocRef,{
+        eventId: event.id,
+        userUid: user.uid,
+        eventDate: event.date,
+        host: false
+      });
     });
 
-    await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
-      eventId: event.id,
-      userUid: user.uid,
-      eventDate: event.date,
-      host: false
-    });
-
+    
+    dispatch(asyncActionFinish());
     toastr.success("Success", "You have signed up to the event");
   } catch (error) {
     console.log(error);
+    dispatch(asyncActionFinish( ))
     toastr.error("Oops", "Problem siginig up to event");
   }
 };
