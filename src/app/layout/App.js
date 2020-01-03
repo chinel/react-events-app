@@ -35,7 +35,7 @@ function App() {
               <Route path="/profile/:id" component={UserIsAuthenticated(UserDetailedPage)} />
               <Route path="/settings" component={UserIsAuthenticated(SettingsDashboard)} />
               <Route path="/createEvent" component={UserIsAuthenticated(EventForm)} />
-              <Route path="/Error" component={NotFound} />
+              <Route path="/error" component={NotFound} />
             </Container>
           </div>
         )}
