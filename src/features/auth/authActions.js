@@ -15,7 +15,7 @@ export const login = creds => {
   return async (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     try {
-      console.log(creds);
+      /* console.log(creds); */
       await firebase
         .auth()
         .signInWithEmailAndPassword(creds.email, creds.password);
