@@ -36,6 +36,7 @@ function App() {
               <Route path="/settings" component={UserIsAuthenticated(SettingsDashboard)} />
               <Route path="/createEvent" component={UserIsAuthenticated(EventForm)} />
               <Route path="/error" component={NotFound} />
+              <Route  component={NotFound} /> {/*This handles routes that are not created, useful for 404 on routes not found */}
             </Container>
           </div>
         )}
