@@ -12,6 +12,7 @@ import { objectToArray , createDataTree} from "../../../app/common/util/helpers"
 import { goingToEvent, cancelGoingToEvent } from "../../user/userActions";
 import { addEventComment } from "../eventActions";
 import { openModal } from '../../modals/modalActions';
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 const mapState = (state, ownProps) => {
   //Here ownProps is the props already available to the component such as the history, match, location object if routing is applied and so on and so forth
@@ -25,6 +26,7 @@ const mapState = (state, ownProps) => {
   }
 
   return {
+    requesting: state.firestore.status.requesting,
     event,
     loading: state.async.loading,
     auth: state.firebase.auth,
@@ -42,6 +44,12 @@ const actions = {
 };
 
 class EventDetailedPage extends Component {
+
+  state = {
+    initialLoading: true
+  }
+
+
   async componentDidMount() {
     const { firestore, match /* history */ } = this.props;
     let event = await firestore.get(`events/${match.params.id}`);
@@ -50,6 +58,9 @@ class EventDetailedPage extends Component {
       this.props.history.push('/error');
     }
     await firestore.setListener(`events/${match.params.id}`);
+    this.setState({
+      initialLoading: false
+    })
     /*  console.log(event);
    if(!event.exists){
     history.push('/events');
@@ -64,6 +75,8 @@ class EventDetailedPage extends Component {
 
   render() {
     const {
+      requesting,
+      match,
       openModal,
       loading,
       event,
@@ -79,6 +92,8 @@ class EventDetailedPage extends Component {
     const isGoing = attendees && attendees.some(a => a.id === auth.uid); //this check to see if attendees is present and if attendees has an id matching auth id it returns true or false    return (
     const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
     const authenticated = auth.isLoaded && !auth.isEmpty;
+    const loadingEvent = requesting[`events/${match.params.id}`];
+    if (loadingEvent || this.state.initialLoading) return <LoadingComponent inverted={true}/>
     return (
       <Grid>
         <Grid.Column width={10}>

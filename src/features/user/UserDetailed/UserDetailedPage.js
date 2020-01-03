@@ -11,6 +11,7 @@ import UserDetailedHeader from './UserDetailedHeader';
 import { userDetaileQuery } from '../userQueries';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { getUserEvents, followUser, unfollowUser} from '../userActions';
+import { toastr } from 'react-redux-toastr';
 
 
 
@@ -50,6 +51,11 @@ const actions = {
 class UserDetailedPage extends Component {
 
 async componentDidMount(){
+  let user = await this.props.firestore.get(`users/${this.props.match.params.id}`);//here we will get firestore from the props as we are directly connect to firestore in this component using the firestoreConnect higher order component
+  if(!user.exists){
+  toastr.error("Not Found","Sorry user not Found");
+  this.props.history.push('/error');
+  }
   let events = await this.props.getUserEvents(this.props.userUid);
   console.log(events)
 }  
@@ -64,7 +70,7 @@ changeTab = (e, data) => {
     render() {
      const {profile, photos, auth, match, requesting, events, eventsLoading, followUser, following, unfollowUser} = this.props;
      const isCurrentUser = auth.uid === match.params.id;
-     const loading = Object.values(requesting).some(a => a === true);//this gets the values of an object and checks if there is any value of that object that is === true
+     const loading = requesting[`users/${match.params.id}`];//Object.values(requesting).some(a => a === true);//this gets the values of an object and checks if there is any value of that object that is === true
      const isFollowing = !isEmpty(following);
      if(loading) return <LoadingComponent inverted={true}/>
      return (
