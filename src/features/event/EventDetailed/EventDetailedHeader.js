@@ -1,6 +1,6 @@
 import React from "react";
 import format from "date-fns/format";
-import { Segment, Image, Item, Header, Button } from "semantic-ui-react";
+import { Segment, Image, Item, Header, Button, Label} from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 const eventImageStyle = {
@@ -55,7 +55,7 @@ const EventDetailedHeader = ({
       </Segment>
 
       <Segment attached="bottom" style={{ overflow: "hidden" }}>
-        {!isHost && (
+        {!isHost && !event.cancelled &&  (
           <div>
             {isGoing && (
               <Button onClick={() => cancelGoingToEvent(event)}>
@@ -82,6 +82,7 @@ const EventDetailedHeader = ({
             )}
           </div>
         )}
+        {event.cancelled && !isHost && <Label color="red" size="large" content="This event has been cancelled"/>}
         {isHost && (
           <Button
             as={Link}
