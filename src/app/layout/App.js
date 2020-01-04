@@ -20,6 +20,7 @@ function App() {
       <ModalManager/>{/*In other to display modals on the page we will be adding our modal manager to the app.js file */}
       <Switch>
         <Route exact path="/" component={HomePage} />
+        
       </Switch>
       <Route
         path="/(.+)"
@@ -27,16 +28,16 @@ function App() {
           <div>
             <NavBar />
             <Container className="main">
-              <Route path="/events" component={EventDashboard} />
-              <Route path="/test" component={TestComponent} />
-              <Route path="/event/:id" component={EventDetailedPage} />
-              <Route path="/manage/:id" component={UserIsAuthenticated(EventForm)}/>
-              <Route path="/people" component={UserIsAuthenticated(PeopleDashboard)} />
-              <Route path="/profile/:id" component={UserIsAuthenticated(UserDetailedPage)} />
-              <Route path="/settings" component={UserIsAuthenticated(SettingsDashboard)} />
-              <Route path="/createEvent" component={UserIsAuthenticated(EventForm)} />
-              <Route path="/error" component={NotFound} />
-              <Route  component={NotFound} /> {/*This handles routes that are not created, useful for 404 on routes not found */}
+              <Route  path="/events" component={EventDashboard} />
+              <Route exact  path="/test" component={TestComponent} />
+              <Route  path="/event/:id" component={EventDetailedPage} />
+              <Route  path="/manage/:id" component={UserIsAuthenticated(EventForm)}/>
+              <Route  path="/people" component={UserIsAuthenticated(PeopleDashboard)} />
+              <Route  path="/profile/:id" component={UserIsAuthenticated(UserDetailedPage)} />
+              <Route  path="/settings" component={UserIsAuthenticated(SettingsDashboard)} />
+              <Route  path="/createEvent" component={UserIsAuthenticated(EventForm)} />
+              <Route  path="/error" component={NotFound} />
+              <Route   component={NotFound} />
             </Container>
           </div>
         )}

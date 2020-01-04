@@ -297,13 +297,14 @@ class EventForm extends Component {
               onClick={this.props.history.goBack} type="button">
                 Cancel
               </Button>
+              {event.id && 
               <Button
               onClick={() => cancelToggle(!event.cancelled, event.id)} /*The ! not operator will return the opposite of whatever event.cancelled is */
               type="button"
               color={event.cancelled ? 'green': 'red'}
               floated="right"
               content={event.cancelled ? 'Reactivate Event' : 'Cancel Event'}
-              />
+              />}
             </Form>
           </Segment>
         </Grid.Column>
