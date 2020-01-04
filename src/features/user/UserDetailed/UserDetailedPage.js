@@ -56,8 +56,8 @@ async componentDidMount(){
   toastr.error("Not Found","Sorry user not Found");
   this.props.history.push('/error');
   }
-  let events = await this.props.getUserEvents(this.props.userUid);
-  console.log(events)
+ await this.props.getUserEvents(this.props.userUid);
+/*   console.log(events) */
 }  
 
 

@@ -1,8 +1,6 @@
 import { toastr } from "react-redux-toastr";
 import {
-  CREATE_EVENT,
-  UPDATE_EVENT,
-  DELETE_EVENT,
+
   FETCH_EVENTS
 } from "./eventConstants";
 import {
@@ -10,7 +8,7 @@ import {
   asyncActionFinish,
   asyncActionStart
 } from "../async/asyncActions";
-import { fetchSampleData } from "../../app/data/mockApi";
+/* import { fetchSampleData } from "../../app/data/mockApi"; */
 import { createNewEvent } from "../../app/common/util/helpers";
 import moment from "moment";
 import firebase from "../../app/config/firebase";
@@ -162,7 +160,7 @@ export const getEventsForDashboard = lastEvent => async (
   dispatch,
   getState
 ) => {
-  let today = new Date(Date.now());
+  /* let today = new Date(Date.now()); */
   const firestore = firebase.firestore();
   const eventRefs = firestore.collection("events");
 

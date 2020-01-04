@@ -3,7 +3,7 @@ import { Grid, Segment, Header, Image } from 'semantic-ui-react';
 import LazyLoad from 'react-lazyload';
 
 const UserDetailedPhotos = ({photos}) => {
-    console.log(photos);
+/*     console.log(photos); */
     return (
         <Grid.Column width={12}>
         

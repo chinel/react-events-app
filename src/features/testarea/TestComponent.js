@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
-import Script  from "react-load-script";
+/* import Script  from "react-load-script"; */
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng

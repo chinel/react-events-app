@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Grid , Loader} from "semantic-ui-react";
-import { firestoreConnect, isLoaded, isEmpty} from 'react-redux-firebase';
+import { firestoreConnect/* , isLoaded, isEmpty */} from 'react-redux-firebase';
 import EventList from "../EventList/EventList";
 import { connect } from "react-redux";
 import {/* deleteEvent, */ getEventsForDashboard } from "../eventActions";
@@ -40,7 +40,7 @@ class EventDashboard extends Component {
 
   async componentDidMount(){
    let next = await this.props.getEventsForDashboard();
-   console.log(next);
+  /*  console.log(next); */
 
    if(next && next.docs && next.docs.length > 1){
      this.setState({
@@ -61,9 +61,9 @@ class EventDashboard extends Component {
   getNextEvent = async() => {
     const {events} = this.props;
     let lastEvent =  events && events[events.length-1];
-    console.log(lastEvent);
+  /*   console.log(lastEvent); */
     let next = await this.props.getEventsForDashboard(lastEvent);
-    console.log(next);
+/*     console.log(next); */
     if(!next){
       this.setState({
         moreEvents: false
@@ -135,7 +135,7 @@ class EventDashboard extends Component {
   handleContextRef =  contextRef => this.setState({contextRef})
 
   render() {
-    const  {events, loading, activities} = this.props;
+    const  {/* events, */ loading, activities} = this.props;
     if (this.state.loadingInitial) return <LoadingComponent inverted={true}/> 
     const {moreEvents, loadedEvents} = this.state;
     //console.log(loading);

@@ -18,7 +18,7 @@ class UnauthModal extends Component {
         }
     }
     render() {
-        const {openModal, closeModal} = this.props;
+        const {openModal/* , closeModal */} = this.props;
         return (
             <Modal
                 size='mini'

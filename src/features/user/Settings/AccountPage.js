@@ -31,6 +31,7 @@ const Account = ({ error , invalid, submitting, handleSubmit, updatePassword,pro
             component={TextInput}
             basic={true}
             placeholder="New Password"
+     
           />
           <Field
             width={8}
@@ -41,6 +42,7 @@ const Account = ({ error , invalid, submitting, handleSubmit, updatePassword,pro
             pointing="left"
             component={TextInput}
             placeholder="Confirm Password"
+           
           />
           {error && (
             <Label basic color="red">

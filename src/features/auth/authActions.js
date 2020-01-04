@@ -1,4 +1,4 @@
-import { LOGIN_USER, SIGN_OUT_USER } from "./authConstants";
+/* import { LOGIN_USER, SIGN_OUT_USER } from "./authConstants"; */
 import { SubmissionError, reset } from "redux-form";
 import { closeModal } from "../modals/modalActions";
 import { toastr } from 'react-redux-toastr';

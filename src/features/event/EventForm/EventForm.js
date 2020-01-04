@@ -12,14 +12,14 @@ import {
   isRequired,
   hasLengthGreaterThan
 } from "revalidate";
-import cuid from "cuid";
+/* import cuid from "cuid"; */
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { createEvent, updateEvent, cancelToggle } from "../eventActions";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
-import moment from "moment";
+/* import moment from "moment"; */
 import PlacesInput from "../../../app/common/form/PlacesInput";
 import { appConfig } from "../../../app/config/config";
 

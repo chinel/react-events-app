@@ -124,7 +124,7 @@ export const setMainPhoto = photo => async (dispatch,getState) => {
   //const firebase = getFirebase(); we will be using batchWrites and so we will be needing to use firebase api directly
   const firestore = firebase.firestore();
   const user  = firebase.auth().currentUser;
-  const today = new Date(Date.now());
+  /* const today = new Date(Date.now()); */
   //Note you have to take into consideration the number of updates you want to perform at once as, updates has an impact on your quota and you have to be really sure it is neccessary before you can perform it
  
   let userDocRef =  firestore.collection('users').doc(user.uid);

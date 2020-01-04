@@ -10,7 +10,7 @@ import App from "./app/layout/App";
 import * as serviceWorker from "./serviceWorker";
 import { configureStore } from "./app/store/configureStore";
 import ScrollToTop from "./app/common/util/ScrollToTop";
-import { loadEvents } from './features/event/eventActions';
+/* import { loadEvents } from './features/event/eventActions'; */
 
 const store = configureStore();
 //Since we will be getting our event data from the store we no longer need this, which was used initially to load data from a mock api store.dispatch(loadEvents());
