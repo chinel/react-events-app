@@ -87,7 +87,9 @@ class EventDetailedPage extends Component {
       eventChat
     } = this.props;
     const attendees =
-      event && event.attendees && objectToArray(event.attendees); //this check to see if there are events and if there are also attendees under the events then it uses the objectToArray helper method to convert it to an array
+      event && event.attendees && objectToArray(event.attendees).sort((a,b) => {
+        return a.joinDate - b.joinDate})
+      ; //this check to see if there are events and if there are also attendees under the events then it uses the objectToArray helper method to convert it to an array
     const isHost = event.hostUid === auth.uid;
     const isGoing = attendees && attendees.some(a => a.id === auth.uid); //this check to see if attendees is present and if attendees has an id matching auth id it returns true or false    return (
     const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
