@@ -42,7 +42,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "analyze" : "source-map-explorer build/static/js/main.*"
+    "analyze" : "source-map-explorer build/static/js/main.*",
+    "deploy": "npm run build && firebase deploy"
   },
   "devDependencies": {
     "redux-devtools-extension": "^2.13.2",
